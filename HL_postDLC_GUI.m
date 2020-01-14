@@ -87,6 +87,10 @@ data = guidata(hObject);
 data.part2plot = get(hObject,'Value');
 max_select = get(hObject,'Max');
 
+if length(data.part2plot) > 3
+    data.part2plot = data.part2plot(1:3);
+    set(hObject,'Value',data.part2plot);
+else
 % first reset selected panel data, then fill in new
 for i_part = 1:max_select
     switch i_part
@@ -152,6 +156,7 @@ set(handles.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind
 % update plots
 guidata(hObject,data)
 plot_current_frame (hObject, eventdata, handles)
+end
 
 %
 % listBox2Data = get(handles.listbox2,'String');
@@ -808,7 +813,7 @@ function FillNaNsCurrDisplay_Callback(hObject, eventdata, handles)
 % hObject    handle to FillNaNsCurrDisplay (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+disp('Fill NaNs for Curr Display')
 data = guidata(hObject);
 
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x (data.idx_current_trial_frs) = ...
@@ -853,6 +858,7 @@ function Save_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % tic
+disp('Saving ...')
 data = guidata(hObject);
 
 temp_save = data.Track;
