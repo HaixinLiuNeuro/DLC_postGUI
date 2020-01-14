@@ -849,6 +849,8 @@ guidata(hObject,data)
 plot_current_frame (hObject, eventdata, handles)
 % tic
 Save_Callback(hObject, eventdata, handles);
+figure(data.figure1); % return to the panel
+
 % toc
 
 
