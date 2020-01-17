@@ -1745,7 +1745,7 @@ answer = questdlg('Would you like to save the data again before exit?', ...
 switch  answer
     case 'Yes'
         Save_Callback(hObject, eventdata, handles);
-    case 'No'
+    case 'No close anyway'
     disp('Not Saved, closing'); 
     case 'Do not close! mistake'
         disp('Returned');return; 
