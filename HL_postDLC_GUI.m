@@ -90,6 +90,8 @@ max_select = get(hObject,'Max');
 if length(data.part2plot) > 3
     data.part2plot = data.part2plot(1:3);
     set(hObject,'Value',data.part2plot);
+    figure(data.figure1);
+
 else
 % first reset selected panel data, then fill in new
 for i_part = 1:max_select
@@ -633,6 +635,8 @@ if ismember( data.curr_trial, data.Track.idx_bad_trial)
 else
     set(data.fig_im_h,'color','w');
 end
+% go back to main figure
+figure(data.figure1);
 
 
 
@@ -648,8 +652,13 @@ if ismember(data.curr_trial, data.Track.idx_bad_trial)
     disp('REMOVED from bad trials');
     data.Track.idx_bad_trial(data.Track.idx_bad_trial == data.curr_trial) = [];
 else
-    data.Track.idx_bad_trial = cat(1, data.Track.idx_bad_trial, data.curr_trial);
-    disp('Labeled as bad trial');
+    if isempty(data.Track.idx_bad_trial)
+        data.Track.idx_bad_trial = data.curr_trial;
+    else
+        data.Track.idx_bad_trial = cat(1, data.Track.idx_bad_trial, data.curr_trial);
+    end
+        disp('Labeled as bad trial');
+        
 end 
 guidata(hObject,data);
 plot_current_frame (hObject, eventdata, handles)
@@ -671,6 +680,7 @@ disp('Labeled as frame to add to deeplab');
 % do this step after figuring out how deeplab process those data, the .h5
 % data is just first made ? 
 guidata(hObject,data);
+figure(data.figure1);
 
 
 % --- Executes on button press in NaNSection.
@@ -1395,6 +1405,7 @@ data.correction_ind_in_part2plot = get(hObject,'Value');
 set(hObject,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
 
 guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
+figure(data.figure1);
 
 % --- Executes during object creation, after setting all properties.
 function CorrectionList_CreateFcn(hObject, eventdata, handles)
@@ -1726,6 +1737,23 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 data = guidata(hObject);
+
+% save the data ?
+answer = questdlg('Would you like to save the data again before exit?', ...
+	'Saving?', ...
+	'Yes','No close anyway','Do not close! mistake','Yes');
+switch  answer
+    case 'Yes'
+        Save_Callback(hObject, eventdata, handles);
+    case 'No'
+    disp('Not Saved, closing'); 
+    case 'Do not close! mistake'
+        disp('Returned');return; 
+    otherwise 
+        error('!')
+end
+
+
 if isfield(data, 'fig_im_h')
 if ishandle(data.fig_im_h)
 close (data.fig_im_h)
@@ -1738,3 +1766,5 @@ end
 end
 delete(hObject);
 clear 
+
+
