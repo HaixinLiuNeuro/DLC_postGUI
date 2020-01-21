@@ -858,7 +858,7 @@ data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part
 guidata(hObject,data)
 plot_current_frame (hObject, eventdata, handles)
 % tic
-Save_Callback(hObject, eventdata, handles);
+% Save_Callback(hObject, eventdata, handles);
 figure(data.figure1); % return to the panel
 
 % toc
@@ -1506,7 +1506,13 @@ switch eventdata.Key
     case 'x' 
         FillNaNsCurrDisplay_Callback(hObject, eventdata, handles);  
     case 'c' 
-        CorrectLabel_Callback(hObject, eventdata, handles);          
+        CorrectLabel_Callback(hObject, eventdata, handles);     
+    case '1'  % set correction list to the 1st in the list
+        SetCorrectionList_Callback_1(hObject, eventdata, handles)
+    case '2'
+        SetCorrectionList_Callback_2(hObject, eventdata, handles);     
+    case '3' 
+        SetCorrectionList_Callback_3(hObject, eventdata, handles);             
     case 'h' % help
         disp('Availabel KeyboardShortCut');
         disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
@@ -1767,4 +1773,74 @@ end
 delete(hObject);
 clear 
 
+
+function SetCorrectionList_Callback_1(hObject, eventdata, handles)
+% hObject    handle to CorrectionList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns CorrectionList contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from CorrectionList
+
+data = guidata(hObject);
+
+% data.correction_ind_in_part2plot = get(hObject,'Value');
+% data.part2plot
+% data.correction_ind_in_part2plot
+% set to 1st choice
+data.correction_ind_in_part2plot = 1;
+
+%update
+set(data.CorrectionList,'Value',data.correction_ind_in_part2plot);
+set(data.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
+
+guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
+figure(data.figure1);
+
+function SetCorrectionList_Callback_2(hObject, eventdata, handles)
+% hObject    handle to CorrectionList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns CorrectionList contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from CorrectionList
+
+data = guidata(hObject);
+
+if length(data.part2plot) < 2
+    disp('Selected Body Parts less < 2');
+else
+
+data.correction_ind_in_part2plot = 2;
+
+%update
+set(data.CorrectionList,'Value',data.correction_ind_in_part2plot);
+set(data.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
+
+guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
+end
+figure(data.figure1);
+
+function SetCorrectionList_Callback_3(hObject, eventdata, handles)
+% hObject    handle to CorrectionList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns CorrectionList contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from CorrectionList
+
+data = guidata(hObject);
+
+if length(data.part2plot) < 3
+    disp('Selected Body Parts less < 3');
+else
+data.correction_ind_in_part2plot = 3;
+
+%update
+set(data.CorrectionList,'Value',data.correction_ind_in_part2plot);
+set(data.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
+
+guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
+end
+figure(data.figure1);
 
