@@ -22,7 +22,7 @@ function varargout = HL_postDLC_GUI(varargin)
 
 % Edit the above text to modify the response to help HL_postDLC_GUI
 
-% Last Modified by GUIDE v2.5 13-Jan-2020 13:40:12
+% Last Modified by GUIDE v2.5 23-Jan-2020 13:05:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1910,3 +1910,149 @@ guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
 end
 figure(data.figure1);
 
+
+% --- Executes on button press in DelAreaCurrDisp.
+function DelAreaCurrDisp_Callback(hObject, eventdata, handles)
+% hObject    handle to DelAreaCurrDisp (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = guidata(hObject);
+% generate a new figure using curr frame, plot the dots for current
+% correction selected parts in the current trial
+temp_fig_h = figure;
+%
+curr_im_Front = rgb2gray( read(data.Movie_Obj,data.curr_fr));
+
+imagesc(data.im_plot_axis_x, data.im_plot_axis_y, curr_im_Front);%, 'Parent', data.axes_im_Front);
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+colormap(gray)
+hold on;
+xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
+ylim([data.im_plot_axis_y(1) data.im_plot_axis_y(end)]);
+
+
+i_part =  get(data.CorrectionList, 'Value');
+
+plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs) +data.Track.offset_x, ...
+                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs) +data.Track.offset_y, 'g.-');
+
+
+disp(['Curr Display: Delete Points within a retangular area for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
+disp('Click 2 points start and end in X, press ENTER after each point');
+disp('Start')
+% figure(data.fig_im_h);
+[temp_pt_s,~] = getpts(gcf);
+temp_pt_s = round(temp_pt_s);
+disp('End')
+[temp_pt_e,~] = getpts(gcf);
+temp_pt_e = round(temp_pt_e);
+temp_bound_x = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
+
+disp('Click 2 points start and end in Y, press ENTER after each point');
+disp('Start')
+[~, temp_pt_s] = getpts(gcf);
+temp_pt_s = round(temp_pt_s);
+disp('End')
+[~, temp_pt_e] = getpts(gcf);
+temp_pt_e = round(temp_pt_e);
+temp_bound_y = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
+
+disp('Delete Points for current trial')
+% data.idx_current_trial_frs
+temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs)< temp_bound_x(2) ...
+              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs)> temp_bound_x(1) ...
+              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs)< temp_bound_y(2) ...
+              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs)> temp_bound_y(1));
+
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs(temp_idx)) = NaN;
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs(temp_idx)) = NaN;
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs(temp_idx)) = NaN;
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs(temp_idx)) = NaN;
+
+close(temp_fig_h);
+% update result
+guidata(hObject,data);
+plot_current_frame (hObject, eventdata, handles)
+
+% --- Executes on button press in DelAreaSession.
+function DelAreaSession_Callback(hObject, eventdata, handles)
+% hObject    handle to DelAreaSession (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = guidata(hObject);
+% generate a new figure using curr frame, plot the dots for current
+% correction selected parts in the current trial
+temp_fig_h = figure;
+%
+% data.N_bodypart = length(data.body_parts);
+% % showing all parts is too busy, just show the X Y of one selected part
+% % i_part = 1; % selection, or default 1
+% if data.N_bodypart >= 3
+% data.part2plot = [1 2 3]; 
+% data.part_color = [1 0 0; 0 0 1; 0 1 0];
+% elseif data.N_bodypart >= 2
+%     data.part2plot = [1 2]; 
+%     data.part_color = [1 0 0; 0 0 1];
+% elseif data.N_bodypart == 1
+%     data.part2plot = [1]; 
+%     data.part_color = [1 0 0];    
+% else
+%     error('body parts not available')
+% end
+
+curr_im_Front = rgb2gray( read(data.Movie_Obj,data.curr_fr));
+
+% data.im_plot_axis_x = 1:size(temp,2);
+% data.im_plot_axis_y = 1:size(temp,1);
+% 
+% data.fig_im_h = figure; 
+% cla;
+imagesc(data.im_plot_axis_x, data.im_plot_axis_y, curr_im_Front);%, 'Parent', data.axes_im_Front);
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+colormap(gray)
+hold on;
+xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
+ylim([data.im_plot_axis_y(1) data.im_plot_axis_y(end)]);
+
+
+i_part =  get(data.CorrectionList, 'Value');
+
+plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x +data.Track.offset_x, ...
+                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y +data.Track.offset_y, 'g.-');
+
+
+disp(['Whole Session: Delete Points within a retangular area for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
+disp('Click 2 points start and end in X, press ENTER after each point');
+disp('Start')
+% figure(data.fig_im_h);
+[temp_pt_s,~] = getpts(gcf);
+temp_pt_s = round(temp_pt_s);
+disp('End')
+[temp_pt_e,~] = getpts(gcf);
+temp_pt_e = round(temp_pt_e);
+temp_bound_x = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
+
+disp('Click 2 points start and end in Y, press ENTER after each point');
+disp('Start')
+[~, temp_pt_s] = getpts(gcf);
+temp_pt_s = round(temp_pt_s);
+disp('End')
+[~, temp_pt_e] = getpts(gcf);
+temp_pt_e = round(temp_pt_e);
+temp_bound_y = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
+
+disp('Delete points for whole session')
+% data.idx_current_trial_frs
+temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x< temp_bound_x(2) ...
+              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x> temp_bound_x(1) ...
+              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y< temp_bound_y(2) ...
+              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y> temp_bound_y(1));
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(temp_idx) = NaN;
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(temp_idx) = NaN;
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(temp_idx) = NaN;
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(temp_idx) = NaN;
+
+close(temp_fig_h);
+% update result
+guidata(hObject,data);
+plot_current_frame (hObject, eventdata, handles)
