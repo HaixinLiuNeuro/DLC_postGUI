@@ -220,7 +220,7 @@ if ~isempty(matfile) && flag_continue
     disp('Continue examining')
     temp = load(fullfile(data.movie_path,matfile.name));
     data.Track = temp;
-    disp('Last left at trial: ', num2str(data.Track.curr_trial));
+    disp(['Last left at trial: ', num2str(data.Track.curr_trial)]);
     % take care of previous dataset, add ori field
     % load data properly
     if ~isfield(data.Track, 'ori')
