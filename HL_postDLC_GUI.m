@@ -1818,26 +1818,26 @@ switch  answer
     case 'Yes'
         Save_Callback(hObject, eventdata, handles);
     case 'No close anyway'
-    disp('Not Saved, closing'); 
+        disp('Not Saved, closing');
     case 'Do not close! mistake'
-        disp('Returned');return; 
-    otherwise 
+        disp('Returned');return;
+    otherwise
         error('!')
 end
 
 
 if isfield(data, 'fig_im_h')
-if ishandle(data.fig_im_h)
-close (data.fig_im_h)
-end
+    if ishandle(data.fig_im_h)
+        close (data.fig_im_h)
+    end
 end
 if isfield(data, 'fig_coor_h')
-if ishandle(data.fig_coor_h)
-close (data.fig_coor_h)
-end
+    if ishandle(data.fig_coor_h)
+        close (data.fig_coor_h)
+    end
 end
 delete(hObject);
-clear 
+% clear
 
 
 function SetCorrectionList_Callback_1(hObject, eventdata, handles)
