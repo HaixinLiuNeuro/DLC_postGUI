@@ -202,9 +202,9 @@ data = guidata(hObject);
 [data.movie_fn,data.movie_path] = uigetfile('*.mp4*','Select FrontViewVideo');
 
 % if processed already load mat file
-matfile = dir([data.movie_path, data.movie_fn(1:(end-4)) '_correctedlabel*.mat']);
+matfile = dir([data.movie_path, data.movie_fn(1:(end-4)) '_*.mat']);
 if length(matfile)>1 % different version of matlab files    
-    [matfile_temp,~ ]= uigetfile([data.movie_path, data.movie_fn(1:end-4) '_correctedlabel*.mat'], ...
+    [matfile_temp,~ ]= uigetfile([data.movie_path, data.movie_fn(1:end-4) '_*.mat'], ...
         'Choose the matlab file for the result processed');
     clear matfile
     matfile.name = matfile_temp;
