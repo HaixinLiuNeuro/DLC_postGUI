@@ -208,6 +208,7 @@ if length(matfile)>1 % different version of matlab files
         'Choose the matlab file for the result processed');
     clear matfile
     matfile.name = matfile_temp;
+    fprintf('Selected .mat file: %s\n',  matfile.name);
 end
 
 if ~isempty(matfile)
