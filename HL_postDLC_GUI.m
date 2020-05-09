@@ -224,7 +224,7 @@ if ~isempty(matfile) && flag_continue
     disp(['Last left at trial: ', num2str(data.Track.curr_trial)]);
     % take care of previous dataset, add ori field
     % load data properly
-    if ~isfield(data.Track, 'ori')
+    if ~isfield(data.Track, 'Ori') % reload original data
         csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.csv']);
         
         if isempty(csv_fn)
@@ -255,7 +255,8 @@ if ~isempty(matfile) && flag_continue
 
         end
     else
-        csv_fn = NaN;
+       csv_fn = NaN;
+       data.csv_fn = data.Track.csv_fn; % display the loaded csv fn in 
     end
 else
     disp('New examining')
@@ -330,7 +331,11 @@ guidata(hObject,data);
 %% update text file
 % Filename_Callback(data.Filename, eventdata, data)
 set(handles.MovieFileName,'String', fullfile(data.movie_path, data.movie_fn));
-set(handles.CSVFileName,'String',  data.csv_fn);
+if size(data.csv_fn) == 1
+    set(handles.CSVFileName,'String',  data.csv_fn);
+else
+    set(handles.CSVFileName,'String',  cat(2,data.csv_fn{:}));
+end
 % TotalFrame_Callback(handles.TotalFrame, eventdata, handles)
 set(handles.TotalFrameNum,'String', num2str(data.N_fr_tol));
 % CurrFrame_Callback(handles.CurrFrame, eventdata, handles)
