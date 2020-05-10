@@ -331,7 +331,7 @@ guidata(hObject,data);
 %% update text file
 % Filename_Callback(data.Filename, eventdata, data)
 set(handles.MovieFileName,'String', fullfile(data.movie_path, data.movie_fn));
-if size(data.csv_fn) == 1
+if ischar(data.csv_fn)
     set(handles.CSVFileName,'String',  data.csv_fn);
 else
     set(handles.CSVFileName,'String',  cat(2,data.csv_fn{:}));
