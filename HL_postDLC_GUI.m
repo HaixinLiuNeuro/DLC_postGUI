@@ -957,6 +957,14 @@ if ~isfield(data,'save_fn')
         data.csv_fn = fullfile(data.movie_path, csv_fn);
     end
     temp_idx = strfind(data.csv_fn,'_');
+    %HL110_200127_SNc_onset0DeepCut_resnet50_ReachPlusOneViewSeparatet1.0Apr11shuffle1_850000_cmb
+    % for combined csv file there is one more '_'
+    % change to use resnet to find the right part
+    if any(strfind(data.csv_fn,'_cmb.csv'))
+        temp_idx(end) = [];
+    end
+    % HL changed 2020-5-14 
+    % better to change useing regexp in the future
     data.save_fn =...
     fullfile(data.movie_path,...
     [data.movie_fn(1:end-4), ...
