@@ -280,9 +280,17 @@ else
         fh = fopen(data.csv_fn);
         fgetl(fh); % skip the first line
         colnames = strsplit(fgetl(fh),','); %extract column names
+        % check if this is old DLC result or new  maDLC result
+        if strcmp(colnames{1},'individuals')
+            disp('maDLC');
+            colnames = strsplit(fgetl(fh),',');
+            M = csvread(data.csv_fn, 4,0); % read in all the numbers
+        else
+            disp('single animal DLC');
+            M = csvread(data.csv_fn, 3,0); % read in all the numbers
+        end
         fclose(fh);
                       
-        M = csvread(data.csv_fn, 3,0); % read in all the numbers
         data.Track.Corrected_frame_ind = M(:,1)+1; % the frame number starts from 0, due to python
         data.Track.Ori_frame_ind = data.Track.Corrected_frame_ind;
         for i_part = 1:(length(colnames)-1)/3 % skip the first column which is frame number
