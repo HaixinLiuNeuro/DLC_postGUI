@@ -228,7 +228,11 @@ if ~isempty(matfile) && flag_continue
         csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.csv']);
         
         if isempty(csv_fn)
-            warning('No csv Front file found, generate NaNs');
+            warning('No csv Front file found in movie folder, Select the CSV elsewhere');
+            % just open GUI selection
+            [csv_fn, csv_path ]= uigetfile([data.movie_path, '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
+            data.csv_fn = fullfile(csv_path, csv_fn);
+
         else
             % if multple files, ask to select
             if length(csv_fn)>1
@@ -237,7 +241,7 @@ if ~isempty(matfile) && flag_continue
             else
                 data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
             end
-                        
+        end
                % fetch all body parts
         fh = fopen(data.csv_fn);
         fgetl(fh); % skip the first line
@@ -253,7 +257,7 @@ if ~isempty(matfile) && flag_continue
             data.Track.Ori.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
         end
 
-        end
+        
     else
        csv_fn = NaN;
        data.csv_fn = data.Track.csv_fn; % display the loaded csv fn in 
@@ -265,16 +269,20 @@ else
 %     csv_fn_Side = dir([data.movie_path, data.movie_fn_Side(1:end-4) '*.csv']);
     
     if isempty(csv_fn)
-        warning('No csv Front file found, generate NaNs');
+            warning('No csv Front file found in movie folder, Select the CSV elsewhere');
+            % just open GUI selection
+            [csv_fn, csv_path ]= uigetfile([data.movie_path, '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
+            data.csv_fn = fullfile(csv_path, csv_fn);
+
     else
         % if multple files, ask to select
         if length(csv_fn)>1
-            [csv_fn,~ ]= uigetfile([data.movie_path, data.movie_fn(1:end-4) '*.csv']);
+            [csv_fn,~ ]= uigetfile([data.movie_path, data.movie_fn(1:end-4) '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
             data.csv_fn = fullfile(data.movie_path, csv_fn);
         else
             data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
         end
-        
+    end
         
         % fetch all body parts
         fh = fopen(data.csv_fn);
@@ -302,7 +310,7 @@ else
             data.Track.Ori.(colnames{3*(i_part-1)+1+1}).y = M(:,1+2+3*(i_part-1));
             data.Track.Ori.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
         end
-    end
+    
 end
 
 % add in variables needed
