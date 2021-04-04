@@ -22,7 +22,7 @@ function varargout = HL_postDLC_GUI(varargin)
 
 % Edit the above text to modify the response to help HL_postDLC_GUI
 
-% Last Modified by GUIDE v2.5 06-Mar-2020 16:12:46
+% Last Modified by GUIDE v2.5 03-Apr-2021 06:25:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -199,7 +199,7 @@ data = guidata(hObject);
 % % end
 % data = rmfield(data,temp(~temp_logic));
 % disp(data)
-[data.movie_fn,data.movie_path] = uigetfile('*.mp4*','Select FrontViewVideo');
+[data.movie_fn,data.movie_path] = uigetfile('*.mp4*','Select Video');
 
 % if processed already load mat file
 matfile = dir([data.movie_path, data.movie_fn(1:(end-4)) '_*.mat']);
@@ -518,6 +518,11 @@ data.curr_fr = data.idx_current_trial_frs(data.trial_init_point);
 guidata(hObject,data)
 
 plot_current_frame (hObject, eventdata, handles)
+%% show some parameters model: Optinal
+fprintf('ReachCropFront crop params: x - %i, y - %i\n', 330, 70 );
+fprintf('ReachCropSide crop params : x - %i, y - %i\n', 880, 130);
+% Front: x: 330; y:70
+% Side:  x: 880; y: 130
 
 
 function plot_current_frame (hObject, eventdata, handles)
@@ -1185,7 +1190,7 @@ data.curr_trial = data.curr_trial-1;
 
 if data.curr_trial < 1
     warning('First trial already!!!');
-    data.curr_trial = data.n_trial;
+    data.curr_trial = 1;
 else
     disp('Previous Trial')
     set(handles.CurrTrialNum, 'String', num2str(data.curr_trial));
@@ -2147,4 +2152,209 @@ function Offset_Y_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
+end
+
+
+
+
+
+% --- Executes on button press in EpochFrame.
+function EpochFrame_Callback(hObject, eventdata, handles)
+% hObject    handle to EpochFrame (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% open another panel to load the FrameIdx file from server
+data = guidata(hObject);
+
+% already loaded previously
+if isfield (data, 'EpochFrameIdx_fn')
+    disp('EpochFrame Idx file loaded')
+else % get the file
+    %parse movie name to get the FrameIndex file
+tokens = regexp(data.movie_fn, ...
+    '(?<animalname>\w\w\d\d\d)_(?<datename>\d\d\d\d\d\d)_(?<proc_name>\w+)*', 'names');% include all initials HLXXX GZXXX etc
+animalname = tokens.animalname;
+ses_date = tokens.datename;
+proc_name = tokens.proc_name;
+
+default_folders;
+[data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile(fullfile(save_path, animalname, ses_date, '*.mat'),'Select EpochFrameIndex mat file');
+end
+% set the name of static txt box FrameIdx Filename
+set(handles.FrameIdx_filename,'String', fullfile(data.EpochFrameIdx_path, data.EpochFrameIdx_fn));
+
+% epoch frame indx mat file
+data.EpochFrameIdx = load(fullfile(data.EpochFrameIdx_path,data.EpochFrameIdx_fn ));
+
+% determine the file type and make the epoch sequence to go through 
+if isfield(data.EpochFrameIdx, 'Epoch_FrameIdx_OppWin_ON') % OptoTim session 
+    data.Epoch_unite = data.EpochFrameIdx.Epoch_FrameIdx_OppWin_ON;
+    data.n_epoch = size(data.Epoch_unite,1);
+    
+elseif isfield(data.EpochFrameIdx, 'Epoch_FrameIdx_OptoTrig_ON') % OptoTim session 
+    data.Epoch_unite = cat(1, data.EpochFrameIdx.Epoch_FrameIdx_OptoTrig_ON, data.EpochFrameIdx.Epoch_FrameIdx_ControlTrig_ON); % 
+    data.n_epoch = size(data.Epoch_unite,1);
+    
+else
+    error('unknow EpochFrameIdx session type');
+end
+
+data.n_epoch_curr = 1; % initiated
+
+% set curr frame accordingly 
+fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr,  data.Epoch_unite(1,1), data.Epoch_unite(1,2));
+data.curr_fr = data.Epoch_unite(1,1);
+
+set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
+set(handles.N_TotalEpoch, 'String', num2str(size(data.Epoch_unite,1)));
+set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+
+% CurrFrameNum_Callback(hObject, eventdata, handles)
+data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+
+% return data
+guidata(hObject,data)
+% update curr trial nunmber
+plot_current_frame (hObject, eventdata, handles);
+
+
+% --- Executes on button press in NaNCurrEpoch.
+function NaNCurrEpoch_Callback(hObject, eventdata, handles)
+% hObject    handle to NaNCurrEpoch (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+data = guidata(hObject);
+[NaN_start NaN_end ]= data.Epoch_unite (data.n_epoch_curr,:);
+idx2NaN = NaN_start:NaN_end;
+disp(['NaN epoch frames for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}]);
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(idx2NaN) = NaN;
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(idx2NaN) = NaN;
+guidata(hObject,data);
+
+% return data
+guidata(hObject,data)
+% update curr trial nunmber
+plot_current_frame (hObject, eventdata, handles);
+
+
+
+
+function Curr_Epoch_Num_Callback(hObject, eventdata, handles)
+% hObject    handle to Curr_Epoch_Num (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Curr_Epoch_Num as text
+%        str2double(get(hObject,'String')) returns contents of Curr_Epoch_Num as a double
+
+data = guidata(hObject);
+
+temp = str2double(get(hObject,'String'));
+if temp > size(data.Epoch_unite,1)
+    disp('Beyond the total Epoch number');
+    set(hObject, 'String', num2str(data.n_epoch_curr));
+else
+    data.n_epoch_curr = temp;
+    data.curr_fr = data.Epoch_unite(data.n_epoch_curr,1);
+fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+    data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+
+    % update current frame
+    set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+    
+% CurrFrameNum_Callback(hObject, eventdata, handles)
+data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+
+% return data
+guidata(hObject,data)
+% update curr trial nunmber
+plot_current_frame (hObject, eventdata, handles);
+
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function Curr_Epoch_Num_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Curr_Epoch_Num (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in NexEpoch.
+function NexEpoch_Callback(hObject, eventdata, handles)
+% hObject    handle to NexEpoch (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+data = guidata(hObject);
+
+data.n_epoch_curr = data.n_epoch_curr+1;
+
+if data.n_epoch_curr > size(data.Epoch_unite,1)
+    warning('Last Epoch already!!!');
+    data.n_epoch_curr = size(data.Epoch_unite,1);
+else
+    disp('Next Epoch')
+    set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
+    data.curr_fr = data.Epoch_unite(data.n_epoch_curr,1);
+fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+    data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    % first update global data?
+    set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+    set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+% CurrFrameNum_Callback(hObject, eventdata, handles)
+data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+
+% return data
+guidata(hObject,data)
+% update curr trial nunmber
+plot_current_frame (hObject, eventdata, handles);
+end
+
+
+% --- Executes on button press in PreEpoch.
+function PreEpoch_Callback(hObject, eventdata, handles)
+% hObject    handle to PreEpoch (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+data = guidata(hObject);
+
+data.n_epoch_curr = data.n_epoch_curr-1;
+
+if data.n_epoch_curr < 1
+    warning('First Epoch already!!!');
+    data.n_epoch_curr = 1;
+else
+    disp('Previous Epoch')
+    set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
+    data.curr_fr = data.Epoch_unite(data.n_epoch_curr,1);
+fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+    data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    
+    set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));  
+  % CurrFrameNum_Callback(hObject, eventdata, handles)
+data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+
+% return data
+guidata(hObject,data)
+% update curr trial nunmber
+plot_current_frame (hObject, eventdata, handles);
+
 end
