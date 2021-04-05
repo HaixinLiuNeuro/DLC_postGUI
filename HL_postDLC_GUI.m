@@ -2179,7 +2179,10 @@ ses_date = tokens.datename;
 proc_name = tokens.proc_name;
 
 default_folders;
-[data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile(fullfile(save_path, animalname, ses_date, '*.mat'),'Select EpochFrameIndex mat file');
+try [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile(fullfile(save_path, animalname, ses_date, '*.mat'),'Select EpochFrameIndex mat file');
+catch [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile('*.mat','Select EpochFrameIndex mat file (on server Data_mat folder)');
+    
+end
 end
 % set the name of static txt box FrameIdx Filename
 set(handles.FrameIdx_filename,'String', fullfile(data.EpochFrameIdx_path, data.EpochFrameIdx_fn));
