@@ -246,9 +246,17 @@ if ~isempty(matfile) && flag_continue
         fh = fopen(data.csv_fn);
         fgetl(fh); % skip the first line
         colnames = strsplit(fgetl(fh),','); %extract column names
+        % check if this is old DLC result or new  maDLC result
+        if strcmp(colnames{1},'individuals')
+            disp('maDLC');
+            colnames = strsplit(fgetl(fh),',');
+            M = csvread(data.csv_fn, 4,0); % read in all the numbers
+        else
+            disp('single animal DLC');
+            M = csvread(data.csv_fn, 3,0); % read in all the numbers
+        end
         fclose(fh);
-                      
-        M = csvread(data.csv_fn, 3,0); % read in all the numbers
+              
         data.Track.Ori_frame_ind = M(:,1)+1;
         for i_part = 1:(length(colnames)-1)/3 % skip the first column which is frame number
             %set ori
@@ -262,11 +270,23 @@ if ~isempty(matfile) && flag_continue
        csv_fn = NaN;
        data.csv_fn = data.Track.csv_fn; % display the loaded csv fn in 
     end
+elseif ~isempty(dir([data.movie_path, data.movie_fn(1:end-4) '*.DLCcmb']))
+    disp('New examining DLCcmb')
+    %% combined DLC result file . DLCcmb
+    csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.DLCcmb']);
+    data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
+    temp = load(data.csv_fn, '-MAT');
+    data.Track = temp;
+    
 else
-    disp('New examining')
-    % get corresponding excel file
+    %% regular csv result from DLC ouput
+    disp('New examining DLC csv file')
+
+    % get corresponding .csv file (DLC result)
     csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.csv']);
 %     csv_fn_Side = dir([data.movie_path, data.movie_fn_Side(1:end-4) '*.csv']);
+% HL 2021-4-14 add in .csvcmb file type, which is the combined DLC result
+% in .mat format
     
     if isempty(csv_fn)
             warning('No csv Front file found in movie folder, Select the CSV elsewhere');
@@ -1348,7 +1368,9 @@ f = msgbox({...
     'x-     Fill NaNs of Curr Display';
     'c-     correct label for curr frame';
     't-     set bound for curr. display';
-    'y-     set bound for the whole session'},...
+    'y-     set bound for the whole session';
+    'g-     next epoch';
+    't-     previous epoch'},...
     'Key Board Short Cuts');
 disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
     'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
