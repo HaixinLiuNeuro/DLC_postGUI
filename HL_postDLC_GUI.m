@@ -400,15 +400,13 @@ data.Track.offset_y = str2double(get(handles.Offset_Y,'String')); % need to fech
 data.N_bodypart = length(data.body_parts);
 % showing all parts is too busy, just show the X Y of one selected part
 % i_part = 1; % selection, or default 1
+data.part_color = [1 0 0; 0 0 1; 0 1 0];
 if data.N_bodypart >= 3
 data.part2plot = [1 2 3]; 
-data.part_color = [1 0 0; 0 0 1; 0 1 0];
 elseif data.N_bodypart >= 2
     data.part2plot = [1 2]; 
-    data.part_color = [1 0 0; 0 0 1];
 elseif data.N_bodypart == 1
     data.part2plot = [1]; 
-    data.part_color = [1 0 0];    
 else
     error('body parts not available')
 end
