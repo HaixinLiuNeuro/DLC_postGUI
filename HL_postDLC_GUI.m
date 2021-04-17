@@ -22,7 +22,7 @@ function varargout = HL_postDLC_GUI(varargin)
 
 % Edit the above text to modify the response to help HL_postDLC_GUI
 
-% Last Modified by GUIDE v2.5 03-Apr-2021 06:25:24
+% Last Modified by GUIDE v2.5 17-Apr-2021 07:55:33
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2196,8 +2196,14 @@ data = guidata(hObject);
 
 % already loaded previously
 if isfield (data, 'EpochFrameIdx_fn')
-    disp('EpochFrame Idx file loaded')
-else % get the file
+    disp('EpochFrame Idx file loaded');
+    tmp_input = input('Do you want reload the EpochFrameIdx file? Yes-1 No-0. Press ENTER');    
+else
+    tmp_input = 1;
+end
+    
+if tmp_input    
+    % get the file
     %parse movie name to get the FrameIndex file
 tokens = regexp(data.movie_fn, ...
     '(?<animalname>\w\w\d\d\d)_(?<datename>\d\d\d\d\d\d)_(?<proc_name>\w+)*', 'names');% include all initials HLXXX GZXXX etc
@@ -2234,6 +2240,9 @@ data.n_epoch_curr = 1; % initiated
 
 % set curr frame accordingly 
 fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr,  data.Epoch_unite(1,1), data.Epoch_unite(1,2));
+set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
 data.curr_fr = data.Epoch_unite(1,1);
 
 set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
@@ -2287,11 +2296,18 @@ temp = str2double(get(hObject,'String'));
 if temp > size(data.Epoch_unite,1)
     disp('Beyond the total Epoch number');
     set(hObject, 'String', num2str(data.n_epoch_curr));
+    fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+        data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+    set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
 else
     data.n_epoch_curr = temp;
     data.curr_fr = data.Epoch_unite(data.n_epoch_curr,1);
-fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
-    data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+        data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+    set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
 
     % update current frame
     set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
@@ -2335,24 +2351,31 @@ data.n_epoch_curr = data.n_epoch_curr+1;
 if data.n_epoch_curr > size(data.Epoch_unite,1)
     warning('Last Epoch already!!!');
     data.n_epoch_curr = size(data.Epoch_unite,1);
+    fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+        data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+    set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
 else
     disp('Next Epoch')
     set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
     data.curr_fr = data.Epoch_unite(data.n_epoch_curr,1);
-fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
-    data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+        data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+    set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
     % first update global data?
     set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
-    set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
-% CurrFrameNum_Callback(hObject, eventdata, handles)
-data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
-data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
-data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
-
-% return data
-guidata(hObject,data)
-% update curr trial nunmber
-plot_current_frame (hObject, eventdata, handles);
+    % CurrFrameNum_Callback(hObject, eventdata, handles)
+    data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+    data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+    data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+    
+    % return data
+    guidata(hObject,data)
+    % update curr trial nunmber
+    plot_current_frame (hObject, eventdata, handles);
 end
 
 
@@ -2369,14 +2392,22 @@ data.n_epoch_curr = data.n_epoch_curr-1;
 if data.n_epoch_curr < 1
     warning('First Epoch already!!!');
     data.n_epoch_curr = 1;
+    fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+        data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+    set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
 else
     disp('Previous Epoch')
     set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
     data.curr_fr = data.Epoch_unite(data.n_epoch_curr,1);
-fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
-    data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr, ...
+        data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
+    set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+    set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
     
-    set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));  
+    set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+    
   % CurrFrameNum_Callback(hObject, eventdata, handles)
 data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
 data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
@@ -2388,3 +2419,17 @@ guidata(hObject,data)
 plot_current_frame (hObject, eventdata, handles);
 
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function CurrEpochFr_start_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to CurrEpochFr_start (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function CurrEpochFr_end_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to CurrEpochFr_end (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
