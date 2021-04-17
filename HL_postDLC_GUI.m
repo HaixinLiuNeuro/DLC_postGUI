@@ -2207,7 +2207,7 @@ proc_name = tokens.proc_name;
 
 default_folders;
 try [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile(fullfile(save_path, animalname, ses_date, '*.mat'),'Select EpochFrameIndex mat file');
-catch [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile('*.mat','Select EpochFrameIndex mat file (on server Data_mat folder)');
+catch [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile('*.mat','Select EpochFrameIndex mat file (on server Data_mat folder or in your local folder)');
     
 end
 end
