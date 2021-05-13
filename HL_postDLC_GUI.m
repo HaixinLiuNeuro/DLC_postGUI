@@ -682,7 +682,7 @@ else
     set(data.fig_im_h,'color','w');
 end
 %% if epoch figure, update
-if isfield(data, 'figure_epoch')
+if isfield(data, 'figure_epoch') && ishandle(data.figure_epoch)
     figure(data.figure_epoch);
     xlim(data.Epoch_unite(data.n_epoch_curr,:)+[-20 20]);
 end
