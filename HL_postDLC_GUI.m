@@ -22,7 +22,7 @@ function varargout = HL_postDLC_GUI(varargin)
 
 % Edit the above text to modify the response to help HL_postDLC_GUI
 
-% Last Modified by GUIDE v2.5 17-Apr-2021 07:55:33
+% Last Modified by GUIDE v2.5 12-May-2021 17:01:21
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2433,3 +2433,290 @@ function CurrEpochFr_end_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to CurrEpochFr_end (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in ResetSection.
+function ResetSection_Callback(hObject, eventdata, handles)
+% hObject    handle to ResetSection (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Ask user to define start and end, then reset those tracked position to
+% original DLC result
+data = guidata(hObject);
+
+% bring up the figure
+figure(data.fig_coor_h);
+% get current selected part
+disp(['For ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
+disp('Select start and end of section to NaN, press ENTER after each point');
+disp('Start')
+[temp_pt_s,~] = getpts(data.coor_axes_h.x{data.correction_ind_in_part2plot});
+temp_pt_s = round(temp_pt_s);
+disp('End')
+[temp_pt_e,~] = getpts(data.coor_axes_h.x{data.correction_ind_in_part2plot});
+temp_pt_e = round(temp_pt_e);
+
+if temp_pt_s < 1
+    temp_pt_s = 1;
+end
+if temp_pt_e > data.frame_n_trial
+    temp_pt_s = data.frame_n_trial;
+end
+
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs(temp_pt_s:temp_pt_e)) = ...
+    data.Track.Ori.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs(temp_pt_s:temp_pt_e));
+data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs(temp_pt_s:temp_pt_e)) = ...
+    data.Track.Ori.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs(temp_pt_s:temp_pt_e));
+% update data
+guidata(hObject,data)
+
+plot_current_frame (hObject, eventdata, handles)
+figure(data.figure1); % return to the panel
+
+% --- Executes on button press in OF_autoCorrect.
+function OF_autoCorrect_Callback(hObject, eventdata, handles)
+% hObject    handle to OF_autoCorrect (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% use data in corrected tracking, to run auto correction, generate
+% inspection epochs, load inot the EpochFrame module
+data = guidata(hObject);
+
+warning('This function NOW only works with data analyzed by OpenField_maDLC-Gate-2021-02-13 model');
+tmp = input('ENTER 1 to continue, press ANYKEY to abort this process');
+if ~isempty(tmp)
+    %% apply autoCorrection on the corrected data    
+    % default parameters for autocorrection
+    prompt = {'rlowess window size (frame n)', ...
+              'median filter window size (frame n)', ...
+              'angle boundary from the median of neck2snout To neck2left', ...
+              'angle boundary from the median of neck2snout To neck2right', ...
+              'angle boundary from the median of neck2left  To neck2right', ...
+              'angle boundary from the median of neck2tail  To neck2left', ...
+              'angle boundary from the median of neck2tail  To neck2right', ...
+              'angle boundary from the median of neck2snout To neck2tail', ...
+              'times of STD as boundary for distance from left2right' ...
+              };
+    dlg_title = 'AutoCorrection parameters (30Hz video uses default)';
+    num_lines = 1;
+    defaultans = {'10', '5', ...
+                  '30', '30', '60', '80','80', '90', '4'}; 
+    answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
+    %
+    n_smo = str2double(answer{1});
+    n_medfilt = str2double(answer{2});
+    paras_bound.neck2snoutTneck2left = str2double(answer{3});
+    paras_bound.neck2snoutTneck2right = str2double(answer{4});
+    paras_bound.neck2leftTneck2right = str2double(answer{5});
+    paras_bound.neck2tailTneck2left = str2double(answer{6});
+    paras_bound.neck2tailTneck2right = str2double(answer{7});
+    paras_bound.neck2snoutTneck2tail = str2double(answer{8});
+    paras_bound.l_left2right = str2double(answer{9});
+    
+    body_parts = fieldnames(data.Track.Corrected);
+    % check body parts with model
+    if ~any(ismember(body_parts, 'snout')) || ...
+            ~any(ismember(body_parts, 'leftear')) || ...
+            ~any(ismember(body_parts, 'rightear')) || ...
+            ~any(ismember(body_parts, 'tailbase')) || ...
+            ~any(ismember(body_parts, 'neck')) || length(body_parts) ~= 5
+        warning('DLC result does not match OpenField_maDLC-Gate-2021-02-13 model. REturned');
+        return
+    end
+    disp('AutoCorrecting ...')
+    for i_b = 1:length(body_parts)
+        tmp_smo.x = smooth(data.Track.Corrected.(body_parts{i_b}).x, n_smo, 'rlowess' ); % rlowess takes a while
+        tmp_smo.y = smooth(data.Track.Corrected.(body_parts{i_b}).y, n_smo, 'rlowess' ); % rlowess takes a while
+        tmp_smo_Dist = ((data.Track.Corrected.(body_parts{i_b}).x - tmp_smo.x) .^2 + ...
+            (data.Track.Corrected.(body_parts{i_b}).y - tmp_smo.y) .^2) .^0.5;
+        
+        noise_std = std(tmp_smo_Dist);
+        dist_median = nanmedian(tmp_smo_Dist);
+        tmp_idx_toFill = find(tmp_smo_Dist > dist_median + 3 * noise_std);
+
+        data.Track.Corrected.(body_parts{i_b}).x(tmp_idx_toFill) = NaN;
+        data.Track.Corrected.(body_parts{i_b}).y(tmp_idx_toFill) = NaN;
+        data.Track.Corrected.(body_parts{i_b}).x = inpaint_nans(data.Track.Corrected.(body_parts{i_b}).x,3);
+        data.Track.Corrected.(body_parts{i_b}).y = inpaint_nans(data.Track.Corrected.(body_parts{i_b}).y,3);
+        
+        data.Track.Corrected.(body_parts{i_b}).x = medfilt1(data.Track.Corrected.(body_parts{i_b}).x,n_medfilt);
+        data.Track.Corrected.(body_parts{i_b}).y = medfilt1(data.Track.Corrected.(body_parts{i_b}).y,n_medfilt);       
+        
+    end    
+
+    %% get the epoches for further manual inspection
+    disp('Getting the epoches for inspection ...')
+    % angle 
+    vector_neck2left = [data.Track.Corrected.leftear.x - data.Track.Corrected.neck.x ...
+                        data.Track.Corrected.leftear.y - data.Track.Corrected.neck.y];
+    vector_neck2right = [data.Track.Corrected.rightear.x - data.Track.Corrected.neck.x ...
+                        data.Track.Corrected.rightear.y - data.Track.Corrected.neck.y]; 
+    vector_neck2snout = [data.Track.Corrected.snout.x - data.Track.Corrected.neck.x ...
+                        data.Track.Corrected.snout.y - data.Track.Corrected.neck.y]; 
+    vector_neck2tail = [data.Track.Corrected.tailbase.x - data.Track.Corrected.neck.x ...
+                        data.Track.Corrected.tailbase.y - data.Track.Corrected.neck.y]; 
+    vector_left2right = [data.Track.Corrected.rightear.x - data.Track.Corrected.leftear.x ...
+                        data.Track.Corrected.rightear.y - data.Track.Corrected.leftear.y];
+                
+    for i_fr = 1:length(data.Track.Corrected.neck.x)
+        [angle.neck2snoutTneck2left(i_fr), l_neck2snout(i_fr), l_neck2left(i_fr)]= ...
+            HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2left(i_fr,:));
+        [angle.neck2snoutTneck2right(i_fr), ~,                 l_neck2right(i_fr)]= ...
+            HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2right(i_fr,:));
+        [angle.neck2leftTneck2right(i_fr), ~, ~]= ...
+            HL_OF_AngleOfTwoVectors(vector_neck2left(i_fr,:), vector_neck2right(i_fr,:));
+        
+        [angle.neck2tailTneck2left(i_fr), l_neck2tail(i_fr), ~]= ...
+            HL_OF_AngleOfTwoVectors(vector_neck2tail(i_fr,:), vector_neck2left(i_fr,:));
+        [angle.neck2tailTneck2right(i_fr), ~, ~]= ...
+            HL_OF_AngleOfTwoVectors(vector_neck2tail(i_fr,:), vector_neck2right(i_fr,:));
+        [angle.neck2snoutTneck2tail(i_fr), ~, ~]= ...
+            HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2tail(i_fr,:));
+        l_left2right(i_fr) = sqrt(sum(arrayfun(@(x) x^2, vector_left2right(i_fr,:))) );
+
+    end
+    % convert to  0 - 360
+    angle_fn = fieldnames(angle);
+    for i_f = 1:length(angle_fn)
+        angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) = angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) + 360;
+    end 
+    % set boundary for detection error:
+    %{
+    l_left2right: use median +/- 2 STD
+    angle_neck2snoutTneck2left: median +/ 30 
+    angle_neck2snoutTneck2right: median +/ 30 
+    angle_neck2leftTneck2right: median +/ 60
+    angle_neck2tailTneck2left: median +/ 80
+    angle_neck2tailTneck2right: median +/ 80
+    angle_neck2snoutTneck2tail: median +/ 80
+    %}
+    bound.l_left2right = [-1 1]*paras_bound.l_left2right*nanstd(l_left2right)+nanmedian(l_left2right);
+    bound.neck2snoutTneck2left = nanmedian(angle.neck2snoutTneck2left) + [-1 1]*paras_bound.neck2snoutTneck2left;
+    bound.neck2snoutTneck2right = nanmedian(angle.neck2snoutTneck2right) + [-1 1]*paras_bound.neck2snoutTneck2right;
+    bound.neck2leftTneck2right = nanmedian(angle.neck2leftTneck2right) + [-1 1]*paras_bound.neck2leftTneck2right;
+    bound.neck2tailTneck2left = nanmedian(angle.neck2tailTneck2left) + [-1 1]*paras_bound.neck2tailTneck2left;
+    bound.neck2tailTneck2right = nanmedian(angle.neck2tailTneck2right) + [-1 1]*paras_bound.neck2tailTneck2right;
+    bound.neck2snoutTneck2tail = nanmedian(angle.neck2snoutTneck2tail) + [-1 1]*paras_bound.neck2snoutTneck2tail;
+    %% get epochs need to check 
+    tmp_idx = [];
+    for i_f = 1:length(angle_fn)
+        tmp_idx = union(tmp_idx, find(angle.(angle_fn{i_f})>bound.(angle_fn{i_f})(2) |  angle.(angle_fn{i_f})<bound.(angle_fn{i_f})(1)) );    
+    end
+    % get the epoch start and end 
+    if  isempty(tmp_idx )
+        Frame_Epoch = [];
+    else
+        tmp_idx_diff = [inf; diff(tmp_idx)];
+        tmp_idx_gap = find(tmp_idx_diff>1);
+        Frame_Epoch(:,1)= tmp_idx(tmp_idx_gap);
+        Frame_Epoch(end,2)=tmp_idx(end);
+        Frame_Epoch(1:end-1,2)=tmp_idx(tmp_idx_gap(2:end)-1);
+    end
+    %% plot the angle result and Epoches 
+     figure;
+    a = [];
+    a(1) = subplot(7,1,1);
+    plot(l_left2right);
+    title('Left-Right distance');
+    hold on;
+    plot([1 length(l_left2right)], ones(1,2)*bound.l_left2right(1), 'r')
+    plot([1 length(l_left2right)], ones(1,2)*bound.l_left2right(2), 'r')
+    a(2) = subplot(7,1,2);
+    plot(angle.neck2snoutTneck2left);
+    title('Angle neck2sount -> neck2left');
+        hold on;
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2left(1), 'r')
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2left(2), 'r')
+a(3) = subplot(7,1,3);
+    plot(angle.neck2snoutTneck2right);
+    title('Angle neck2sount -> neck2right');
+            hold on;
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2right(1), 'r')
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2right(2), 'r')
+
+    a(4) = subplot(7,1,4);
+    plot(angle.neck2leftTneck2right);
+    title('Angle neck2left -> neck2right');
+             hold on;
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2leftTneck2right(1), 'r')
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2leftTneck2right(2), 'r')
+
+    a(5) = subplot(7,1,5);
+    plot(angle.neck2tailTneck2left);
+    title('Angle neck2tail -> neck2left');
+             hold on;
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2left(1), 'r')
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2left(2), 'r')
+
+    a(6) = subplot(7,1,6);
+    plot(angle.neck2tailTneck2right);
+    title('Angle neck2tail -> neck2right');
+             hold on;
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2right(1), 'r')
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2right(2), 'r')
+
+    a(7) = subplot(7,1,7);
+    plot(angle.neck2snoutTneck2tail);
+    title('Angle neck2snout -> neck2tail');
+             hold on;
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2tail(1), 'r')
+    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2tail(2), 'r')
+    linkaxes(a, 'x');
+    %% sign Epoch
+    % set the name of static txt box FrameIdx Filename
+set(handles.FrameIdx_filename,'String', 'AutoCorrection Found Epochs');
+
+% epoch frame indx mat file
+data.EpochFrameIdx = [];%load(fullfile(data.EpochFrameIdx_path,data.EpochFrameIdx_fn ));
+data.Epoch_unite = Frame_Epoch;
+data.n_epoch = size(data.Epoch_unite,1);
+
+data.n_epoch_curr = 1; % initiated
+
+% set curr frame accordingly 
+fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr,  data.Epoch_unite(1,1), data.Epoch_unite(1,2));
+set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
+data.curr_fr = data.Epoch_unite(1,1);
+
+set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
+set(handles.N_TotalEpoch, 'String', num2str(size(data.Epoch_unite,1)));
+set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+
+% CurrFrameNum_Callback(hObject, eventdata, handles)
+data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+
+    
+    
+    %% update guidata/return revised data to GUI
+    guidata(hObject,data)
+end
+plot_current_frame (hObject, eventdata, handles)
+% tic
+% Save_Callback(hObject, eventdata, handles);
+figure(data.figure1); % return to the panel
+
+
+% --- Executes on button press in ResetAll.
+function ResetAll_Callback(hObject, eventdata, handles)
+% hObject    handle to ResetAll (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% reset all data to original DLC result for the selected object
+
+data = guidata(hObject);
+
+tmp = input('Are you sure to reset all corrected data points back to DLC original result?\nYes-1, No-0: ');
+if tmp
+    data.Track.Corrected = data.Track.Ori;
+    % update data
+    guidata(hObject,data)
+    
+end
+plot_current_frame (hObject, eventdata, handles)
+% tic
+% Save_Callback(hObject, eventdata, handles);
+figure(data.figure1); % return to the panel
