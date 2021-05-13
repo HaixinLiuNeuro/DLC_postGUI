@@ -22,16 +22,16 @@ function varargout = HL_postDLC_GUI(varargin)
 
 % Edit the above text to modify the response to help HL_postDLC_GUI
 
-% Last Modified by GUIDE v2.5 12-May-2021 17:01:21
+% Last Modified by GUIDE v2.5 12-May-2021 22:57:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @HL_postDLC_GUI_OpeningFcn, ...
-                   'gui_OutputFcn',  @HL_postDLC_GUI_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @HL_postDLC_GUI_OpeningFcn, ...
+    'gui_OutputFcn',  @HL_postDLC_GUI_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -63,7 +63,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = HL_postDLC_GUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = HL_postDLC_GUI_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -91,73 +91,73 @@ if length(data.part2plot) > 3
     data.part2plot = data.part2plot(1:3);
     set(hObject,'Value',data.part2plot);
     figure(data.figure1);
-
+    
 else
-% first reset selected panel data, then fill in new
-for i_part = 1:max_select
-    switch i_part
-        case 1
-            set(handles.Position_body1,'String',num2str(NaN));
-            set(handles.Position_body1,'BackgroundColor',data.part_color(1,:));
-            set(handles.Position_body1,'ForegroundColor',[1 1 1]);
-            set(handles.Xcoor_body1,'String',num2str(NaN));
-            set(handles.YCoor_body1,'String',num2str(NaN));
-            set(handles.ProbValue_body1,'String',num2str(NaN));
-        case 2
-            set(handles.Position_body2,'String',num2str(NaN));
-            set(handles.Position_body2,'BackgroundColor',data.part_color(2,:));
-            set(handles.Position_body2,'ForegroundColor',[1 1 1]);
-            set(handles.Xcoor_body2,'String',num2str(NaN));
-            set(handles.Ycoor_body2,'String',num2str(NaN));
-            set(handles.ProbValue_body2,'String',num2str(NaN));
-            
-        case 3
-            set(handles.Position_body3,'String',num2str(NaN));
-            set(handles.Position_body3,'BackgroundColor',data.part_color(3,:));
-            set(handles.Position_body3,'ForegroundColor',[1 1 1]);
-            set(handles.Xcoor_body3,'String',num2str(NaN));
-            set(handles.Ycoor_body3,'String',num2str(NaN));
-            set(handles.ProbValue_body3,'String',num2str(NaN));            
+    % first reset selected panel data, then fill in new
+    for i_part = 1:max_select
+        switch i_part
+            case 1
+                set(handles.Position_body1,'String',num2str(NaN));
+                set(handles.Position_body1,'BackgroundColor',data.part_color(1,:));
+                set(handles.Position_body1,'ForegroundColor',[1 1 1]);
+                set(handles.Xcoor_body1,'String',num2str(NaN));
+                set(handles.YCoor_body1,'String',num2str(NaN));
+                set(handles.ProbValue_body1,'String',num2str(NaN));
+            case 2
+                set(handles.Position_body2,'String',num2str(NaN));
+                set(handles.Position_body2,'BackgroundColor',data.part_color(2,:));
+                set(handles.Position_body2,'ForegroundColor',[1 1 1]);
+                set(handles.Xcoor_body2,'String',num2str(NaN));
+                set(handles.Ycoor_body2,'String',num2str(NaN));
+                set(handles.ProbValue_body2,'String',num2str(NaN));
+                
+            case 3
+                set(handles.Position_body3,'String',num2str(NaN));
+                set(handles.Position_body3,'BackgroundColor',data.part_color(3,:));
+                set(handles.Position_body3,'ForegroundColor',[1 1 1]);
+                set(handles.Xcoor_body3,'String',num2str(NaN));
+                set(handles.Ycoor_body3,'String',num2str(NaN));
+                set(handles.ProbValue_body3,'String',num2str(NaN));
+        end
     end
-end
-for i_part = 1:length(data.part2plot)
-    switch i_part
-        case 1
-            set(handles.Position_body1,'String',data.body_parts{data.part2plot(i_part)});
-            set(handles.Position_body1,'BackgroundColor',data.part_color(1,:));
-            set(handles.Position_body1,'ForegroundColor',[1 1 1]);
-            set(handles.Xcoor_body1,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr) ));
-            set(handles.YCoor_body1,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr) ));
-            set(handles.ProbValue_body1,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.curr_fr) ));
-        case 2
-            set(handles.Position_body2,'String',data.body_parts{data.part2plot(i_part)});
-            set(handles.Position_body2,'BackgroundColor',data.part_color(2,:));
-            set(handles.Position_body2,'ForegroundColor',[1 1 1]);
-            set(handles.Xcoor_body2,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr) ));
-            set(handles.Ycoor_body2,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr) ));
-            set(handles.ProbValue_body2,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.curr_fr) ));
-            
-        case 3
-            set(handles.Position_body3,'String',data.body_parts{data.part2plot(i_part)});
-            set(handles.Position_body3,'BackgroundColor',data.part_color(3,:));
-            set(handles.Position_body3,'ForegroundColor',[1 1 1]);
-            set(handles.Xcoor_body3,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr) ));
-            set(handles.Ycoor_body3,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr) ));
-            set(handles.ProbValue_body3,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.curr_fr) ));
-            
+    for i_part = 1:length(data.part2plot)
+        switch i_part
+            case 1
+                set(handles.Position_body1,'String',data.body_parts{data.part2plot(i_part)});
+                set(handles.Position_body1,'BackgroundColor',data.part_color(1,:));
+                set(handles.Position_body1,'ForegroundColor',[1 1 1]);
+                set(handles.Xcoor_body1,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr) ));
+                set(handles.YCoor_body1,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr) ));
+                set(handles.ProbValue_body1,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.curr_fr) ));
+            case 2
+                set(handles.Position_body2,'String',data.body_parts{data.part2plot(i_part)});
+                set(handles.Position_body2,'BackgroundColor',data.part_color(2,:));
+                set(handles.Position_body2,'ForegroundColor',[1 1 1]);
+                set(handles.Xcoor_body2,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr) ));
+                set(handles.Ycoor_body2,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr) ));
+                set(handles.ProbValue_body2,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.curr_fr) ));
+                
+            case 3
+                set(handles.Position_body3,'String',data.body_parts{data.part2plot(i_part)});
+                set(handles.Position_body3,'BackgroundColor',data.part_color(3,:));
+                set(handles.Position_body3,'ForegroundColor',[1 1 1]);
+                set(handles.Xcoor_body3,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr) ));
+                set(handles.Ycoor_body3,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr) ));
+                set(handles.ProbValue_body3,'String',num2str(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.curr_fr) ));
+                
+        end
     end
-end
-
-
-% also update the correction panel's list
-set(handles.CorrectionList,'String',{data.body_parts{data.part2plot}});
-data.correction_ind_in_part2plot = 1;
-set(handles.CorrectionList,'Value',data.correction_ind_in_part2plot);
-set(handles.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
-
-% update plots
-guidata(hObject,data)
-plot_current_frame (hObject, eventdata, handles)
+    
+    
+    % also update the correction panel's list
+    set(handles.CorrectionList,'String',{data.body_parts{data.part2plot}});
+    data.correction_ind_in_part2plot = 1;
+    set(handles.CorrectionList,'Value',data.correction_ind_in_part2plot);
+    set(handles.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
+    
+    % update plots
+    guidata(hObject,data)
+    plot_current_frame (hObject, eventdata, handles)
 end
 
 %
@@ -195,7 +195,7 @@ data = guidata(hObject);
 % temp = fieldnames(data,'-full');
 % temp_logic = cellfun(@(x)isobject( data.(x)),temp);
 % % for ii = 1:length(temp)
-% %    disp([ temp{ii}, ' ', num2str(temp_logic(ii))]) 
+% %    disp([ temp{ii}, ' ', num2str(temp_logic(ii))])
 % % end
 % data = rmfield(data,temp(~temp_logic));
 % disp(data)
@@ -203,7 +203,7 @@ data = guidata(hObject);
 
 % if processed already load mat file
 matfile = dir([data.movie_path, data.movie_fn(1:(end-4)) '_*.mat']);
-if length(matfile)>1 % different version of matlab files    
+if length(matfile)>1 % different version of matlab files
     [matfile_temp,~ ]= uigetfile([data.movie_path, data.movie_fn(1:end-4) '_*.mat'], ...
         'Choose the matlab file for the result processed');
     clear matfile
@@ -215,7 +215,7 @@ if ~isempty(matfile)
     disp('Continue or New: 1 or 0')
     flag_continue = input('Continue or New: 1 or 0\n');
 end
-            
+
 if ~isempty(matfile) && flag_continue
     
     disp('Continue examining')
@@ -232,7 +232,7 @@ if ~isempty(matfile) && flag_continue
             % just open GUI selection
             [csv_fn, csv_path ]= uigetfile([data.movie_path, '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
             data.csv_fn = fullfile(csv_path, csv_fn);
-
+            
         else
             % if multple files, ask to select
             if length(csv_fn)>1
@@ -242,68 +242,6 @@ if ~isempty(matfile) && flag_continue
                 data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
             end
         end
-               % fetch all body parts
-        fh = fopen(data.csv_fn);
-        fgetl(fh); % skip the first line
-        colnames = strsplit(fgetl(fh),','); %extract column names
-        % check if this is old DLC result or new  maDLC result
-        if strcmp(colnames{1},'individuals')
-            disp('maDLC');
-            colnames = strsplit(fgetl(fh),',');
-            M = csvread(data.csv_fn, 4,0); % read in all the numbers
-        else
-            disp('single animal DLC');
-            M = csvread(data.csv_fn, 3,0); % read in all the numbers
-        end
-        fclose(fh);
-              
-        data.Track.Ori_frame_ind = M(:,1)+1;
-        for i_part = 1:(length(colnames)-1)/3 % skip the first column which is frame number
-            %set ori
-            data.Track.Ori.(colnames{3*(i_part-1)+1+1}).x = M(:,1+1+3*(i_part-1));
-            data.Track.Ori.(colnames{3*(i_part-1)+1+1}).y = M(:,1+2+3*(i_part-1));
-            data.Track.Ori.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
-        end
-
-        
-    else
-       csv_fn = NaN;
-       data.csv_fn = data.Track.csv_fn; % display the loaded csv fn in 
-    end
-elseif ~isempty(dir([data.movie_path, data.movie_fn(1:end-4) '*.DLCcmb']))
-    disp('New examining DLCcmb')
-    %% combined DLC result file . DLCcmb
-    csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.DLCcmb']);
-    data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
-    temp = load(data.csv_fn, '-MAT');
-    data.Track = temp;
-    
-else
-    %% regular csv result from DLC ouput
-    disp('New examining DLC csv file')
-
-    % get corresponding .csv file (DLC result)
-    csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.csv']);
-%     csv_fn_Side = dir([data.movie_path, data.movie_fn_Side(1:end-4) '*.csv']);
-% HL 2021-4-14 add in .csvcmb file type, which is the combined DLC result
-% in .mat format
-    
-    if isempty(csv_fn)
-            warning('No csv Front file found in movie folder, Select the CSV elsewhere');
-            % just open GUI selection
-            [csv_fn, csv_path ]= uigetfile([data.movie_path, '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
-            data.csv_fn = fullfile(csv_path, csv_fn);
-
-    else
-        % if multple files, ask to select
-        if length(csv_fn)>1
-            [csv_fn,~ ]= uigetfile([data.movie_path, data.movie_fn(1:end-4) '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
-            data.csv_fn = fullfile(data.movie_path, csv_fn);
-        else
-            data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
-        end
-    end
-        
         % fetch all body parts
         fh = fopen(data.csv_fn);
         fgetl(fh); % skip the first line
@@ -318,18 +256,80 @@ else
             M = csvread(data.csv_fn, 3,0); % read in all the numbers
         end
         fclose(fh);
-                      
-        data.Track.Corrected_frame_ind = M(:,1)+1; % the frame number starts from 0, due to python
-        data.Track.Ori_frame_ind = data.Track.Corrected_frame_ind;
+        
+        data.Track.Ori_frame_ind = M(:,1)+1;
         for i_part = 1:(length(colnames)-1)/3 % skip the first column which is frame number
-            data.Track.Corrected.(colnames{3*(i_part-1)+1+1}).x = M(:,1+1+3*(i_part-1));
-            data.Track.Corrected.(colnames{3*(i_part-1)+1+1}).y = M(:,1+2+3*(i_part-1));
-            data.Track.Corrected.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
             %set ori
             data.Track.Ori.(colnames{3*(i_part-1)+1+1}).x = M(:,1+1+3*(i_part-1));
             data.Track.Ori.(colnames{3*(i_part-1)+1+1}).y = M(:,1+2+3*(i_part-1));
             data.Track.Ori.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
         end
+        
+        
+    else
+        csv_fn = NaN;
+        data.csv_fn = data.Track.csv_fn; % display the loaded csv fn in
+    end
+elseif ~isempty(dir([data.movie_path, data.movie_fn(1:end-4) '*.DLCcmb']))
+    disp('New examining DLCcmb')
+    %% combined DLC result file . DLCcmb
+    csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.DLCcmb']);
+    data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
+    temp = load(data.csv_fn, '-MAT');
+    data.Track = temp;
+    
+else
+    %% regular csv result from DLC ouput
+    disp('New examining DLC csv file')
+    
+    % get corresponding .csv file (DLC result)
+    csv_fn = dir([data.movie_path, data.movie_fn(1:end-4) '*.csv']);
+    %     csv_fn_Side = dir([data.movie_path, data.movie_fn_Side(1:end-4) '*.csv']);
+    % HL 2021-4-14 add in .csvcmb file type, which is the combined DLC result
+    % in .mat format
+    
+    if isempty(csv_fn)
+        warning('No csv Front file found in movie folder, Select the CSV elsewhere');
+        % just open GUI selection
+        [csv_fn, csv_path ]= uigetfile([data.movie_path, '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
+        data.csv_fn = fullfile(csv_path, csv_fn);
+        
+    else
+        % if multple files, ask to select
+        if length(csv_fn)>1
+            [csv_fn,~ ]= uigetfile([data.movie_path, data.movie_fn(1:end-4) '*.csv'], ['Select CSV file for: ' data.movie_fn(1:end-4)]);
+            data.csv_fn = fullfile(data.movie_path, csv_fn);
+        else
+            data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
+        end
+    end
+    
+    % fetch all body parts
+    fh = fopen(data.csv_fn);
+    fgetl(fh); % skip the first line
+    colnames = strsplit(fgetl(fh),','); %extract column names
+    % check if this is old DLC result or new  maDLC result
+    if strcmp(colnames{1},'individuals')
+        disp('maDLC');
+        colnames = strsplit(fgetl(fh),',');
+        M = csvread(data.csv_fn, 4,0); % read in all the numbers
+    else
+        disp('single animal DLC');
+        M = csvread(data.csv_fn, 3,0); % read in all the numbers
+    end
+    fclose(fh);
+    
+    data.Track.Corrected_frame_ind = M(:,1)+1; % the frame number starts from 0, due to python
+    data.Track.Ori_frame_ind = data.Track.Corrected_frame_ind;
+    for i_part = 1:(length(colnames)-1)/3 % skip the first column which is frame number
+        data.Track.Corrected.(colnames{3*(i_part-1)+1+1}).x = M(:,1+1+3*(i_part-1));
+        data.Track.Corrected.(colnames{3*(i_part-1)+1+1}).y = M(:,1+2+3*(i_part-1));
+        data.Track.Corrected.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
+        %set ori
+        data.Track.Ori.(colnames{3*(i_part-1)+1+1}).x = M(:,1+1+3*(i_part-1));
+        data.Track.Ori.(colnames{3*(i_part-1)+1+1}).y = M(:,1+2+3*(i_part-1));
+        data.Track.Ori.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
+    end
     
 end
 
@@ -343,7 +343,7 @@ end
 
 
 
-%get video 
+%get video
 
 data.Movie_Obj = VideoReader(fullfile(data.movie_path, data.movie_fn));
 
@@ -402,11 +402,11 @@ data.N_bodypart = length(data.body_parts);
 % i_part = 1; % selection, or default 1
 data.part_color = [1 0 0; 0 0 1; 0 1 0];
 if data.N_bodypart >= 3
-data.part2plot = [1 2 3]; 
+    data.part2plot = [1 2 3];
 elseif data.N_bodypart >= 2
-    data.part2plot = [1 2]; 
+    data.part2plot = [1 2];
 elseif data.N_bodypart == 1
-    data.part2plot = [1]; 
+    data.part2plot = [1];
 else
     error('body parts not available')
 end
@@ -415,10 +415,10 @@ temp = rgb2gray( read(data.Movie_Obj,1));
 data.im_plot_axis_x = 1:size(temp,2);
 data.im_plot_axis_y = 1:size(temp,1);
 
-data.fig_im_h = figure; 
+data.fig_im_h = figure;
 cla;
 data.plot_h.im = imagesc(data.im_plot_axis_x, data.im_plot_axis_y, temp);%, 'Parent', data.axes_im_Front);
-pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]);
 colormap(gray)
 hold on;
 xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
@@ -434,51 +434,51 @@ if curr_plot_range(2) > data.frame_n_trial
     curr_plot_range(2) =  data.frame_n_trial;
 end
 for i_part = 1:length(data.part2plot)
-data.plot_h.im_line{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_y, 'g.-');
-data.plot_h.im_range{i_part} =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_y, 'yx','MarkerFaceColor','y');
-data.plot_h.im_curr{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y,...
-                             'o','MarkerFaceColor',data.part_color(i_part,:),'MarkerEdgeColor',data.part_color(i_part,:));
+    data.plot_h.im_line{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_x, ...
+        data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_y, 'g.-');
+    data.plot_h.im_range{i_part} =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_x, ...
+        data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_y, 'yx','MarkerFaceColor','y');
+    data.plot_h.im_curr{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, ...
+        data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y,...
+        'o','MarkerFaceColor',data.part_color(i_part,:),'MarkerEdgeColor',data.part_color(i_part,:));
 end
 
 
 % plot coordinate 1-D
-data.fig_coor_h = figure; 
+data.fig_coor_h = figure;
 
 for i_part = 1:length(data.part2plot)
-
-data.coor_axes_h.x{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2-1); cla; hold on;
-data.plot_h.Ori_line.x{i_part}  = ...
-    plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'b'); % original label result plot first layer
-data.plot_h.Correct_dot.x{i_part}   = ...
-    plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'k.');
-
-temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
-if isempty(temp_idx)
-    data.plot_h.X_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ks');
-else
-    data.plot_h.X_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(temp_idx))+data.Track.offset_x, 'ks');
-end
-data.plot_h.X_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ro');
-data.title_h{i_part} = title(data.body_parts{data.part2plot(i_part)});
-ylabel('X');
-% Y
-data.coor_axes_h.y{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2); cla; hold on;
-data.plot_h.Ori_line.y{i_part}  = ...
-    plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'b'); % original label result plot first layer
-data.plot_h.Correct_dot.y{i_part}   = ...
-    plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'k.');
-
-temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
-if isempty(temp_idx)
-    data.plot_h.Y_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ks');
-else
-    data.plot_h.Y_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(temp_idx))+data.Track.offset_y, 'ks');
-end
-data.plot_h.Y_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ro');
-ylabel('Y');
+    
+    data.coor_axes_h.x{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2-1); cla; hold on;
+    data.plot_h.Ori_line.x{i_part}  = ...
+        plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'b'); % original label result plot first layer
+    data.plot_h.Correct_dot.x{i_part}   = ...
+        plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'k.');
+    
+    temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
+    if isempty(temp_idx)
+        data.plot_h.X_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ks');
+    else
+        data.plot_h.X_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(temp_idx))+data.Track.offset_x, 'ks');
+    end
+    data.plot_h.X_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ro');
+    data.title_h{i_part} = title(data.body_parts{data.part2plot(i_part)});
+    ylabel('X');
+    % Y
+    data.coor_axes_h.y{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2); cla; hold on;
+    data.plot_h.Ori_line.y{i_part}  = ...
+        plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'b'); % original label result plot first layer
+    data.plot_h.Correct_dot.y{i_part}   = ...
+        plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'k.');
+    
+    temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
+    if isempty(temp_idx)
+        data.plot_h.Y_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ks');
+    else
+        data.plot_h.Y_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(temp_idx))+data.Track.offset_y, 'ks');
+    end
+    data.plot_h.Y_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ro');
+    ylabel('Y');
 end
 xlabel('Frame # in current trial')
 
@@ -546,14 +546,14 @@ fprintf('ReachCropSide crop params : x - %i, y - %i\n', 880, 130);
 function plot_current_frame (hObject, eventdata, handles)
 % tic
 data = guidata(hObject);
-%% check if figures are closed. if so, reiniated 
+%% check if figures are closed. if so, reiniated
 if ~ishandle(data.fig_im_h)
     re_initiate_im_fig (hObject, eventdata, handles);
-    data = guidata(hObject);    
+    data = guidata(hObject);
 end
 if ~ishandle(data.fig_coor_h)
     re_initiate_coor_fig (hObject, eventdata, handles);
-    data = guidata(hObject);    
+    data = guidata(hObject);
 end
 %%
 data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
@@ -561,7 +561,7 @@ data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
 %% make sure the index do not exceed the total; pad the trial with the last frame
 
 if data.idx_current_trial_frs(end) > data.N_fr_tol
-    data.idx_current_trial_frs (data.idx_current_trial_frs > data.N_fr_tol) = data.N_fr_tol;     
+    data.idx_current_trial_frs (data.idx_current_trial_frs > data.N_fr_tol) = data.N_fr_tol;
 end
 %% update the CDATA
 % im
@@ -589,57 +589,57 @@ for i_part = 1:length(data.part2plot)
         'XData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2)))+data.Track.offset_x);
     set(data.plot_h.im_line{i_part},...
         'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2)))+data.Track.offset_y);
-
+    
     set(data.plot_h.im_range{i_part},...
         'XData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1)))+data.Track.offset_x);
     set(data.plot_h.im_range{i_part},...
         'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1)))+data.Track.offset_y);
-
+    
     set(data.plot_h.im_curr{i_part},...
         'XData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x);
     set(data.plot_h.im_curr{i_part},...
         'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y);
-
+    
 end
 
 % 1-D
 for i_part = 1:length(data.part2plot)
     % title
     if isfield(data, 'title_h')
-    set(data.title_h{i_part} , 'String', data.body_parts{data.part2plot(i_part)});
+        set(data.title_h{i_part} , 'String', data.body_parts{data.part2plot(i_part)});
     end
     %X
-set(data.plot_h.Ori_line.x{i_part},'YData',data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)'+data.Track.offset_x);
-set(data.plot_h.Correct_dot.x{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)'+data.Track.offset_x);
-
-temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
-if isempty(temp_idx)
-    set(data.plot_h.X_prob{i_part},'XData',[]);
-    set(data.plot_h.X_prob{i_part},'YData',[]);
-else
-    set(data.plot_h.X_prob{i_part},'XData',temp_idx); % data.plot_h.X_Front_prob.XData = [];
-    set(data.plot_h.X_prob{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(temp_idx))+data.Track.offset_x); %data.plot_h.X_Front_prob.YData = [];
-end
-
-set(data.plot_h.X_curr_circle{i_part},'XData', data.curr_fr_n_in_trial);
-set(data.plot_h.X_curr_circle{i_part},'YData', data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x);
-                                               
-% Y
-set(data.plot_h.Ori_line.y{i_part},'YData',data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)'+data.Track.offset_y);
-set(data.plot_h.Correct_dot.y{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)'+data.Track.offset_y);
-
-temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
-if isempty(temp_idx)
-    set(data.plot_h.Y_prob{i_part},'XData',[]);
-    set(data.plot_h.Y_prob{i_part},'YData',[]);
-else
-    set(data.plot_h.Y_prob{i_part},'XData',temp_idx); % data.plot_h.X_Front_prob.XData = [];
-    set(data.plot_h.Y_prob{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(temp_idx))+data.Track.offset_y); %data.plot_h.X_Front_prob.YData = [];
-end
-
-set(data.plot_h.Y_curr_circle{i_part},'XData', data.curr_fr_n_in_trial);
-set(data.plot_h.Y_curr_circle{i_part},'YData', data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y);
-                                               
+    set(data.plot_h.Ori_line.x{i_part},'YData',data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)'+data.Track.offset_x);
+    set(data.plot_h.Correct_dot.x{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)'+data.Track.offset_x);
+    
+    temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
+    if isempty(temp_idx)
+        set(data.plot_h.X_prob{i_part},'XData',[]);
+        set(data.plot_h.X_prob{i_part},'YData',[]);
+    else
+        set(data.plot_h.X_prob{i_part},'XData',temp_idx); % data.plot_h.X_Front_prob.XData = [];
+        set(data.plot_h.X_prob{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(temp_idx))+data.Track.offset_x); %data.plot_h.X_Front_prob.YData = [];
+    end
+    
+    set(data.plot_h.X_curr_circle{i_part},'XData', data.curr_fr_n_in_trial);
+    set(data.plot_h.X_curr_circle{i_part},'YData', data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x);
+    
+    % Y
+    set(data.plot_h.Ori_line.y{i_part},'YData',data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)'+data.Track.offset_y);
+    set(data.plot_h.Correct_dot.y{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)'+data.Track.offset_y);
+    
+    temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
+    if isempty(temp_idx)
+        set(data.plot_h.Y_prob{i_part},'XData',[]);
+        set(data.plot_h.Y_prob{i_part},'YData',[]);
+    else
+        set(data.plot_h.Y_prob{i_part},'XData',temp_idx); % data.plot_h.X_Front_prob.XData = [];
+        set(data.plot_h.Y_prob{i_part},'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(temp_idx))+data.Track.offset_y); %data.plot_h.X_Front_prob.YData = [];
+    end
+    
+    set(data.plot_h.Y_curr_circle{i_part},'XData', data.curr_fr_n_in_trial);
+    set(data.plot_h.Y_curr_circle{i_part},'YData', data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y);
+    
 end
 
 guidata(hObject,data)
@@ -681,7 +681,12 @@ if ismember( data.curr_trial, data.Track.idx_bad_trial)
 else
     set(data.fig_im_h,'color','w');
 end
-% go back to main figure
+%% if epoch figure, update
+if isfield(data, 'figure_epoch')
+    figure(data.figure_epoch);
+    xlim(data.Epoch_unite(data.n_epoch_curr,:)+[-20 20]);
+end
+%% go back to main figure
 figure(data.figure1);
 
 
@@ -703,9 +708,9 @@ else
     else
         data.Track.idx_bad_trial = cat(1, data.Track.idx_bad_trial, data.curr_trial);
     end
-        disp('Labeled as bad trial');
-        
-end 
+    disp('Labeled as bad trial');
+    
+end
 guidata(hObject,data);
 plot_current_frame (hObject, eventdata, handles)
 
@@ -724,7 +729,7 @@ disp('Labeled as frame to add to deeplab');
 
 % extract the frame save as PNG for later deeplab process
 % do this step after figuring out how deeplab process those data, the .h5
-% data is just first made ? 
+% data is just first made ?
 guidata(hObject,data);
 figure(data.figure1);
 
@@ -796,14 +801,14 @@ temp_fig_h = figure;
 % % showing all parts is too busy, just show the X Y of one selected part
 % % i_part = 1; % selection, or default 1
 % if data.N_bodypart >= 3
-% data.part2plot = [1 2 3]; 
+% data.part2plot = [1 2 3];
 % data.part_color = [1 0 0; 0 0 1; 0 1 0];
 % elseif data.N_bodypart >= 2
-%     data.part2plot = [1 2]; 
+%     data.part2plot = [1 2];
 %     data.part_color = [1 0 0; 0 0 1];
 % elseif data.N_bodypart == 1
-%     data.part2plot = [1]; 
-%     data.part_color = [1 0 0];    
+%     data.part2plot = [1];
+%     data.part_color = [1 0 0];
 % else
 %     error('body parts not available')
 % end
@@ -812,11 +817,11 @@ curr_im_Front = rgb2gray( read(data.Movie_Obj,data.curr_fr));
 
 % data.im_plot_axis_x = 1:size(temp,2);
 % data.im_plot_axis_y = 1:size(temp,1);
-% 
-% data.fig_im_h = figure; 
+%
+% data.fig_im_h = figure;
 % cla;
 imagesc(data.im_plot_axis_x, data.im_plot_axis_y, curr_im_Front);%, 'Parent', data.axes_im_Front);
-pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]);
 colormap(gray)
 hold on;
 xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
@@ -826,7 +831,7 @@ ylim([data.im_plot_axis_y(1) data.im_plot_axis_y(end)]);
 i_part =  get(data.CorrectionList, 'Value');
 
 plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs) +data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs) +data.Track.offset_y, 'g.-');
+    data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs) +data.Track.offset_y, 'g.-');
 
 
 disp(['Curr Display set the bound for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
@@ -852,11 +857,11 @@ temp_bound_y = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
 disp('Set bound for current trial')
 % data.idx_current_trial_frs
 temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs) +data.Track.offset_x > temp_bound_x(2) ...
-              | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs) +data.Track.offset_x < temp_bound_x(1));
+    | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs) +data.Track.offset_x < temp_bound_x(1));
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs(temp_idx)) = NaN;
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs(temp_idx)) = NaN;
 temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs) +data.Track.offset_y> temp_bound_y(2) ...
-              | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs) +data.Track.offset_y< temp_bound_y(1));
+    | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs) +data.Track.offset_y< temp_bound_y(1));
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs(temp_idx)) = NaN;
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs(temp_idx)) = NaN;
 
@@ -880,7 +885,7 @@ temp_fig_h = figure;
 curr_im_Front = rgb2gray( read(data.Movie_Obj,data.curr_fr));
 
 imagesc(data.im_plot_axis_x, data.im_plot_axis_y, curr_im_Front);%, 'Parent', data.axes_im_Front);
-pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]);
 colormap(gray)
 hold on;
 xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
@@ -890,7 +895,7 @@ ylim([data.im_plot_axis_y(1) data.im_plot_axis_y(end)]);
 i_part =  get(data.CorrectionList, 'Value');
 
 plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(:)+data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(:) +data.Track.offset_y, 'g.-');
+    data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(:) +data.Track.offset_y, 'g.-');
 
 
 disp(['Whole session: set the bound for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
@@ -915,12 +920,12 @@ temp_bound_y = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
 
 disp('Set bound for whole session')
 temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x +data.Track.offset_x > temp_bound_x(2) ...
-              | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x +data.Track.offset_x < temp_bound_x(1));
+    | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x +data.Track.offset_x < temp_bound_x(1));
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(temp_idx) = NaN;
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(temp_idx) = NaN;
 
 temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y +data.Track.offset_y > temp_bound_y(2) ...
-              | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y +data.Track.offset_y < temp_bound_y(1));
+    | data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y +data.Track.offset_y < temp_bound_y(1));
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(temp_idx) = NaN;
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(temp_idx) = NaN;
 
@@ -1002,14 +1007,14 @@ if ~isfield(data,'save_fn')
     if any(strfind(data.csv_fn,'_cmb.csv'))
         temp_idx(end) = [];
     end
-    % HL changed 2020-5-14 
+    % HL changed 2020-5-14
     % better to change useing regexp in the future
     data.save_fn =...
-    fullfile(data.movie_path,...
-    [data.movie_fn(1:end-4), ...
-    data.csv_fn(temp_idx(end-2):end-4),...
-    '.mat']);
-% when training, make different stop point
+        fullfile(data.movie_path,...
+        [data.movie_fn(1:end-4), ...
+        data.csv_fn(temp_idx(end-2):end-4),...
+        '.mat']);
+    % when training, make different stop point
 end
 temp_save.csv_fn = data.csv_fn;
 temp_save.movie_fn = data.movie_fn;
@@ -1074,7 +1079,7 @@ data.frame_n_trial = str2double(get(hObject,'String'));
 data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
 data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
 data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
-data.n_trial = ceil(data.N_fr_tol/data.frame_n_trial); 
+data.n_trial = ceil(data.N_fr_tol/data.frame_n_trial);
 
 % update curr trial nunmber, total trial number
 set(data.CurrTrialNum, 'String', num2str(data.curr_trial))
@@ -1087,8 +1092,8 @@ end
 guidata(hObject,data)
 % for coordinate plot lim x axis
 for ii = 1:length(data.coor_axes_h.x)
-   xlim(data.coor_axes_h.x{ii}, [1 data.frame_n_trial ]) ;
-   xlim(data.coor_axes_h.y{ii}, [1 data.frame_n_trial ]) ;
+    xlim(data.coor_axes_h.x{ii}, [1 data.frame_n_trial ]) ;
+    xlim(data.coor_axes_h.y{ii}, [1 data.frame_n_trial ]) ;
 end
 plot_current_frame (hObject, eventdata, handles);
 
@@ -1265,14 +1270,14 @@ disp('Click to get the postion in X coordinate plot, PRESS ENTER when done');
 [xi,yi] = getpts(gcf);
 
 if (round(xi)+ (data.curr_trial-1)*data.frame_n_trial)> data.N_fr_tol
-    disp('Beyond the total frame number');    
+    disp('Beyond the total frame number');
 else
-data.curr_fr_n_in_trial= round(xi);
-data.curr_fr = data.curr_fr_n_in_trial + (data.curr_trial-1)*data.frame_n_trial;
-
-guidata(hObject,data)
-plot_current_frame (hObject, eventdata, handles)
-figure(data.figure1); % return to the panel
+    data.curr_fr_n_in_trial= round(xi);
+    data.curr_fr = data.curr_fr_n_in_trial + (data.curr_trial-1)*data.frame_n_trial;
+    
+    guidata(hObject,data)
+    plot_current_frame (hObject, eventdata, handles)
+    figure(data.figure1); % return to the panel
 end
 
 
@@ -1370,10 +1375,10 @@ f = msgbox({...
     'g-     next epoch';
     'z-     previous epoch'},...
     'Key Board Short Cuts');
-    disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
-            'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
-            'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session' ...
-            'g-next epoch, z-previous epoch'])
+disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
+    'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
+    'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session' ...
+    'g-next epoch, z-previous epoch'])
 
 
 function Xcoor_body2_Callback(hObject, eventdata, handles)
@@ -1559,19 +1564,19 @@ disp(eventdata.Key) % Let's display the key, for fun!
 switch eventdata.Key
     case 'd' % next frame
         if data.curr_fr+ 1 >= data.N_fr_tol
-            data.curr_fr = data.N_fr_tol; 
+            data.curr_fr = data.N_fr_tol;
             warning('END of Movie');
         elseif data.curr_fr+ 1 >= data.idx_current_trial_frs(end)
             warning('END of curr display, move to next trial/disp, please!!');
         else
             disp('Next Frame')
             data.curr_fr = data.curr_fr + 1;
-        
-        guidata(hObject,data);
-        set(handles.CurrFrameNum,'String', data.curr_fr);
-        plot_current_frame (hObject, eventdata, handles);
+            
+            guidata(hObject,data);
+            set(handles.CurrFrameNum,'String', data.curr_fr);
+            plot_current_frame (hObject, eventdata, handles);
         end
-    case 'a' % previous frame        
+    case 'a' % previous frame
         if data.curr_fr <=1
             warning('BEGINING of Movie');
         elseif data.curr_fr <= data.idx_current_trial_frs(1)
@@ -1579,11 +1584,11 @@ switch eventdata.Key
         else
             disp('Previous Frame')
             data.curr_fr = data.curr_fr - 1;
-        guidata(hObject,data);
-        set(handles.CurrFrameNum,'String', data.curr_fr);
-        plot_current_frame (hObject, eventdata, handles); 
+            guidata(hObject,data);
+            set(handles.CurrFrameNum,'String', data.curr_fr);
+            plot_current_frame (hObject, eventdata, handles);
         end
-
+        
     case 'space' % jump 20 frames
         if data.curr_fr+ 20 >= data.N_fr_tol
             data.curr_fr = data.N_fr_tol;
@@ -1592,20 +1597,20 @@ switch eventdata.Key
             warning('END of curr display, move to next trial/disp, please!!');
         else
             disp('Jump 20 Frames Forward')
-            data.curr_fr = data.curr_fr + 20;            
+            data.curr_fr = data.curr_fr + 20;
             guidata(hObject,data);
             set(handles.CurrFrameNum,'String', data.curr_fr);
             plot_current_frame (hObject, eventdata, handles);
         end
     case 'b' % jump 200 frames
-         if data.curr_fr+ 200 >= data.N_fr_tol
+        if data.curr_fr+ 200 >= data.N_fr_tol
             data.curr_fr = data.N_fr_tol;
             warning('END of Movie');
         elseif data.curr_fr+ 200 >= data.idx_current_trial_frs(end)
             warning('END of curr display, move to next trial/disp, please!!');
         else
             disp('Jump 200 Frames')
-            data.curr_fr = data.curr_fr + 200;            
+            data.curr_fr = data.curr_fr + 200;
             guidata(hObject,data);
             set(handles.CurrFrameNum,'String', data.curr_fr);
             plot_current_frame (hObject, eventdata, handles);
@@ -1613,7 +1618,7 @@ switch eventdata.Key
     case 'f' % go to next trial
         NextTrial_Callback(hObject, eventdata, handles);
     case 'g' % go to next epoch
-        NexEpoch_Callback(hObject, eventdata, handles); 
+        NexEpoch_Callback(hObject, eventdata, handles);
     case 'z' % go to previous epoch
         PreEpoch_Callback(hObject, eventdata, handles);
     case 'v' % go to next trial
@@ -1624,22 +1629,22 @@ switch eventdata.Key
         Save_Callback(hObject, eventdata, handles);
     case 'n' % nan current frame
         NaNCurrFrame_Callback(hObject, eventdata, handles);
-    case 'm' 
+    case 'm'
         NaNSection_Callback(hObject, eventdata, handles);
-    case 't' 
+    case 't'
         SetBoundCurrDisplay_Callback(hObject, eventdata, handles);
-    case 'y' 
-        SetBoundWholeSes_Callback(hObject, eventdata, handles);  
-    case 'x' 
-        FillNaNsCurrDisplay_Callback(hObject, eventdata, handles);  
-    case 'c' 
-        CorrectLabel_Callback(hObject, eventdata, handles);     
+    case 'y'
+        SetBoundWholeSes_Callback(hObject, eventdata, handles);
+    case 'x'
+        FillNaNsCurrDisplay_Callback(hObject, eventdata, handles);
+    case 'c'
+        CorrectLabel_Callback(hObject, eventdata, handles);
     case '1'  % set correction list to the 1st in the list
         SetCorrectionList_Callback_1(hObject, eventdata, handles)
     case '2'
-        SetCorrectionList_Callback_2(hObject, eventdata, handles);     
-    case '3' 
-        SetCorrectionList_Callback_3(hObject, eventdata, handles);             
+        SetCorrectionList_Callback_2(hObject, eventdata, handles);
+    case '3'
+        SetCorrectionList_Callback_3(hObject, eventdata, handles);
     case 'h' % help
         disp('Availabel KeyboardShortCut');
         disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
@@ -1652,21 +1657,21 @@ switch eventdata.Key
             'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
             'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session'...
             'g-next epoch, z-previous epoch'])
-       
+        
 end
 
 
-%% reinitiated 
+%% reinitiated
 
 function re_initiate_im_fig (hObject, eventdata, handles)
 
 data = guidata(hObject);
 
-data.fig_im_h = figure; 
+data.fig_im_h = figure;
 cla;
 temp = rgb2gray( read(data.Movie_Obj,data.curr_fr));
 data.plot_h.im = imagesc(data.im_plot_axis_x, data.im_plot_axis_y, temp);%, 'Parent', data.axes_im_Front);
-pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]);
 colormap(gray)
 hold on;
 xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
@@ -1682,27 +1687,27 @@ if curr_plot_range(2) > data.frame_n_trial
     curr_plot_range(2) =  data.frame_n_trial;
 end
 
-% fist make default (3) lines, then replace with current selected 
+% fist make default (3) lines, then replace with current selected
 if data.N_bodypart >= 3
-data.part2plot = [1 2 3]; 
-data.part_color = [1 0 0; 0 0 1; 0 1 0];
+    data.part2plot = [1 2 3];
+    data.part_color = [1 0 0; 0 0 1; 0 1 0];
 elseif data.N_bodypart >= 2
-    data.part2plot = [1 2]; 
+    data.part2plot = [1 2];
     data.part_color = [1 0 0; 0 0 1];
 elseif data.N_bodypart == 1
-    data.part2plot = [1]; 
-    data.part_color = [1 0 0];    
+    data.part2plot = [1];
+    data.part_color = [1 0 0];
 else
     error('body parts not available')
 end
 for i_part = 1:length(data.part2plot)
-data.plot_h.im_line{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_y, 'g.-');
-data.plot_h.im_range{i_part} =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_y, 'yx','MarkerFaceColor','y');
-data.plot_h.im_curr{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y,...
-                             'o','MarkerFaceColor',data.part_color(i_part,:),'MarkerEdgeColor',data.part_color(i_part,:));
+    data.plot_h.im_line{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_x, ...
+        data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2))) +data.Track.offset_y, 'g.-');
+    data.plot_h.im_range{i_part} =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_x, ...
+        data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1))) +data.Track.offset_y, 'yx','MarkerFaceColor','y');
+    data.plot_h.im_curr{i_part}  =  plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, ...
+        data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y,...
+        'o','MarkerFaceColor',data.part_color(i_part,:),'MarkerEdgeColor',data.part_color(i_part,:));
 end
 
 %  then replace with current selected
@@ -1712,22 +1717,22 @@ for i_part = 1:length(data.part2plot)
         'XData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2)))+data.Track.offset_x);
     set(data.plot_h.im_line{i_part},...
         'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1):curr_plot_range(2)))+data.Track.offset_y);
-
+    
     set(data.plot_h.im_range{i_part},...
         'XData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(curr_plot_range(1)))+data.Track.offset_x);
     set(data.plot_h.im_range{i_part},...
         'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(curr_plot_range(1)))+data.Track.offset_y);
-
+    
     set(data.plot_h.im_curr{i_part},...
         'XData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x);
     set(data.plot_h.im_curr{i_part},...
         'YData',data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y);
-
+    
 end
 
 
 
-% update 
+% update
 guidata(hObject,data)
 
 
@@ -1737,58 +1742,58 @@ data = guidata(hObject);
 
 % plot coordinate 1-D
 % temp_n = get(data.ObjectList,'Max');
-data.fig_coor_h = figure; 
+data.fig_coor_h = figure;
 % re initaite plots
 if data.N_bodypart >= 3
-data.part2plot = [1 2 3]; 
-data.part_color = [1 0 0; 0 0 1; 0 1 0];
+    data.part2plot = [1 2 3];
+    data.part_color = [1 0 0; 0 0 1; 0 1 0];
 elseif data.N_bodypart >= 2
-    data.part2plot = [1 2]; 
+    data.part2plot = [1 2];
     data.part_color = [1 0 0; 0 0 1];
 elseif data.N_bodypart == 1
-    data.part2plot = [1]; 
-    data.part_color = [1 0 0];    
+    data.part2plot = [1];
+    data.part_color = [1 0 0];
 else
     error('body parts not available')
 end
 
 for i_part = 1:length(data.part2plot)
-data.coor_axes_h.x{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2-1); cla; hold on;
-data.plot_h.Ori_line.x{i_part}  = ...
-    plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'b'); % original label result plot first layer
-data.plot_h.Correct_dot.x{i_part}   = ...
-    plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'k.');
-
-temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
-if isempty(temp_idx)
-    data.plot_h.X_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ks');
-else
-    data.plot_h.X_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(temp_idx))+data.Track.offset_x, 'ks');
-end
-data.plot_h.X_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ro');
-data.title_h{i_part} = title(data.body_parts{data.part2plot(i_part)});
-ylabel('X');
-% Y
-data.coor_axes_h.y{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2); cla; hold on;
-data.plot_h.Ori_line.y{i_part}  = ...
-    plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'b'); % original label result plot first layer
-data.plot_h.Correct_dot.y{i_part}   = ...
-    plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'k.');
-
-temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
-if isempty(temp_idx)
-    data.plot_h.Y_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ks');
-else
-    data.plot_h.Y_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(temp_idx))+data.Track.offset_y, 'ks');
-end
-data.plot_h.Y_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ro');
-ylabel('Y');
+    data.coor_axes_h.x{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2-1); cla; hold on;
+    data.plot_h.Ori_line.x{i_part}  = ...
+        plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'b'); % original label result plot first layer
+    data.plot_h.Correct_dot.x{i_part}   = ...
+        plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs)+data.Track.offset_x(1), 'k.');
+    
+    temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
+    if isempty(temp_idx)
+        data.plot_h.X_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ks');
+    else
+        data.plot_h.X_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs(temp_idx))+data.Track.offset_x, 'ks');
+    end
+    data.plot_h.X_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.curr_fr)+data.Track.offset_x, 'ro');
+    data.title_h{i_part} = title(data.body_parts{data.part2plot(i_part)});
+    ylabel('X');
+    % Y
+    data.coor_axes_h.y{i_part}  = subplot(length(data.part2plot)*2,1,i_part*2); cla; hold on;
+    data.plot_h.Ori_line.y{i_part}  = ...
+        plot(data.Track.Ori.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'b'); % original label result plot first layer
+    data.plot_h.Correct_dot.y{i_part}   = ...
+        plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs)+data.Track.offset_y, 'k.');
+    
+    temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).Likelihood(data.idx_current_trial_frs) < data.prob_thred);
+    if isempty(temp_idx)
+        data.plot_h.Y_prob{i_part} = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ks');
+    else
+        data.plot_h.Y_prob{i_part} = plot(temp_idx, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs(temp_idx))+data.Track.offset_y, 'ks');
+    end
+    data.plot_h.Y_curr_circle{i_part}  = plot(data.curr_fr_n_in_trial, data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.curr_fr)+data.Track.offset_y, 'ro');
+    ylabel('Y');
 end
 xlabel('Frame # in current trial')
 
 linkaxes([data.coor_axes_h.x{:} data.coor_axes_h.y{:}], 'x');
 
-% fill in numbers 
+% fill in numbers
 % refetch selected parts
 data.part2plot = get(data.ObjectList,'Value');
 max_select = get(data.ObjectList,'Max');
@@ -1860,7 +1865,7 @@ data.correction_ind_in_part2plot = 1;
 set(handles.CorrectionList,'Value',data.correction_ind_in_part2plot);
 set(handles.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
 
-% update 
+% update
 guidata(hObject,data)
 
 
@@ -1875,8 +1880,8 @@ data = guidata(hObject);
 
 % save the data ?
 answer = questdlg('Would you like to save the data again before exit?', ...
-	'Saving?', ...
-	'Yes','No close anyway','Do not close! mistake','Yes');
+    'Saving?', ...
+    'Yes','No close anyway','Do not close! mistake','Yes');
 switch  answer
     case 'Yes'
         Save_Callback(hObject, eventdata, handles);
@@ -1939,14 +1944,14 @@ data = guidata(hObject);
 if length(data.part2plot) < 2
     disp('Selected Body Parts less < 2');
 else
-
-data.correction_ind_in_part2plot = 2;
-
-%update
-set(data.CorrectionList,'Value',data.correction_ind_in_part2plot);
-set(data.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
-
-guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
+    
+    data.correction_ind_in_part2plot = 2;
+    
+    %update
+    set(data.CorrectionList,'Value',data.correction_ind_in_part2plot);
+    set(data.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
+    
+    guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
 end
 figure(data.figure1);
 
@@ -1963,13 +1968,13 @@ data = guidata(hObject);
 if length(data.part2plot) < 3
     disp('Selected Body Parts less < 3');
 else
-data.correction_ind_in_part2plot = 3;
-
-%update
-set(data.CorrectionList,'Value',data.correction_ind_in_part2plot);
-set(data.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
-
-guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
+    data.correction_ind_in_part2plot = 3;
+    
+    %update
+    set(data.CorrectionList,'Value',data.correction_ind_in_part2plot);
+    set(data.CorrectionList,'BackgroundColor',data.part_color(data.correction_ind_in_part2plot,:));
+    
+    guidata(hObject,data) % plot_current_frame (hObject, eventdata, handles)
 end
 figure(data.figure1);
 
@@ -1987,7 +1992,7 @@ temp_fig_h = figure;
 curr_im_Front = rgb2gray( read(data.Movie_Obj,data.curr_fr));
 
 imagesc(data.im_plot_axis_x, data.im_plot_axis_y, curr_im_Front);%, 'Parent', data.axes_im_Front);
-pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]);
 colormap(gray)
 hold on;
 xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
@@ -1997,7 +2002,7 @@ ylim([data.im_plot_axis_y(1) data.im_plot_axis_y(end)]);
 i_part =  get(data.CorrectionList, 'Value');
 
 plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x(data.idx_current_trial_frs) +data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs) +data.Track.offset_y, 'g.-');
+    data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y(data.idx_current_trial_frs) +data.Track.offset_y, 'g.-');
 
 
 disp(['Curr Display: Delete Points within a retangular area for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
@@ -2023,9 +2028,9 @@ temp_bound_y = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
 disp('Delete Points for current trial')
 % data.idx_current_trial_frs
 temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs) +data.Track.offset_x< temp_bound_x(2) ...
-              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs) +data.Track.offset_x> temp_bound_x(1) ...
-              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs) +data.Track.offset_y< temp_bound_y(2) ...
-              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs) +data.Track.offset_y> temp_bound_y(1));
+    & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs) +data.Track.offset_x> temp_bound_x(1) ...
+    & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs) +data.Track.offset_y< temp_bound_y(2) ...
+    & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs) +data.Track.offset_y> temp_bound_y(1));
 
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(data.idx_current_trial_frs(temp_idx)) = NaN;
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(data.idx_current_trial_frs(temp_idx)) = NaN;
@@ -2051,14 +2056,14 @@ temp_fig_h = figure;
 % % showing all parts is too busy, just show the X Y of one selected part
 % % i_part = 1; % selection, or default 1
 % if data.N_bodypart >= 3
-% data.part2plot = [1 2 3]; 
+% data.part2plot = [1 2 3];
 % data.part_color = [1 0 0; 0 0 1; 0 1 0];
 % elseif data.N_bodypart >= 2
-%     data.part2plot = [1 2]; 
+%     data.part2plot = [1 2];
 %     data.part_color = [1 0 0; 0 0 1];
 % elseif data.N_bodypart == 1
-%     data.part2plot = [1]; 
-%     data.part_color = [1 0 0];    
+%     data.part2plot = [1];
+%     data.part_color = [1 0 0];
 % else
 %     error('body parts not available')
 % end
@@ -2067,11 +2072,11 @@ curr_im_Front = rgb2gray( read(data.Movie_Obj,data.curr_fr));
 
 % data.im_plot_axis_x = 1:size(temp,2);
 % data.im_plot_axis_y = 1:size(temp,1);
-% 
-% data.fig_im_h = figure; 
+%
+% data.fig_im_h = figure;
 % cla;
 imagesc(data.im_plot_axis_x, data.im_plot_axis_y, curr_im_Front);%, 'Parent', data.axes_im_Front);
-pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]); 
+pbaspect([data.im_plot_axis_x(end)/data.im_plot_axis_y(end) 1 1]);
 colormap(gray)
 hold on;
 xlim([data.im_plot_axis_x(1) data.im_plot_axis_x(end)]);
@@ -2081,7 +2086,7 @@ ylim([data.im_plot_axis_y(1) data.im_plot_axis_y(end)]);
 i_part =  get(data.CorrectionList, 'Value');
 
 plot(data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).x +data.Track.offset_x, ...
-                             data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y +data.Track.offset_y, 'g.-');
+    data.Track.Corrected.(data.body_parts{data.part2plot(i_part)}).y +data.Track.offset_y, 'g.-');
 
 
 disp(['Whole Session: Delete Points within a retangular area for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
@@ -2107,9 +2112,9 @@ temp_bound_y = [min([temp_pt_s temp_pt_e]) max([temp_pt_s temp_pt_e])];
 disp('Delete points for whole session')
 % data.idx_current_trial_frs
 temp_idx = find(data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x +data.Track.offset_x< temp_bound_x(2) ...
-              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x +data.Track.offset_x> temp_bound_x(1) ...
-              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y +data.Track.offset_y< temp_bound_y(2) ...
-              & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y +data.Track.offset_y> temp_bound_y(1));
+    & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x +data.Track.offset_x> temp_bound_x(1) ...
+    & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y +data.Track.offset_y< temp_bound_y(2) ...
+    & data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y +data.Track.offset_y> temp_bound_y(1));
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(temp_idx) = NaN;
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y(temp_idx) = NaN;
 data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x(temp_idx) = NaN;
@@ -2197,25 +2202,25 @@ data = guidata(hObject);
 % already loaded previously
 if isfield (data, 'EpochFrameIdx_fn')
     disp('EpochFrame Idx file loaded');
-    tmp_input = input('Do you want reload the EpochFrameIdx file? Yes-1 No-0. Press ENTER');    
+    tmp_input = input('Do you want reload the EpochFrameIdx file? Yes-1 No-0. Press ENTER');
 else
     tmp_input = 1;
 end
-    
-if tmp_input    
+
+if tmp_input
     % get the file
     %parse movie name to get the FrameIndex file
-tokens = regexp(data.movie_fn, ...
-    '(?<animalname>\w\w\d\d\d)_(?<datename>\d\d\d\d\d\d)_(?<proc_name>\w+)*', 'names');% include all initials HLXXX GZXXX etc
-animalname = tokens.animalname;
-ses_date = tokens.datename;
-proc_name = tokens.proc_name;
-
-default_folders;
-try [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile(fullfile(save_path, animalname, ses_date, '*.mat'),'Select EpochFrameIndex mat file');
-catch [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile('*.mat','Select EpochFrameIndex mat file (on server Data_mat folder or in your local folder)');
+    tokens = regexp(data.movie_fn, ...
+        '(?<animalname>\w\w\d\d\d)_(?<datename>\d\d\d\d\d\d)_(?<proc_name>\w+)*', 'names');% include all initials HLXXX GZXXX etc
+    animalname = tokens.animalname;
+    ses_date = tokens.datename;
+    proc_name = tokens.proc_name;
     
-end
+    default_folders;
+    try [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile(fullfile(save_path, animalname, ses_date, '*.mat'),'Select EpochFrameIndex mat file');
+    catch [data.EpochFrameIdx_fn,data.EpochFrameIdx_path] = uigetfile('*.mat','Select EpochFrameIndex mat file (on server Data_mat folder or in your local folder)');
+        
+    end
 end
 % set the name of static txt box FrameIdx Filename
 set(handles.FrameIdx_filename,'String', fullfile(data.EpochFrameIdx_path, data.EpochFrameIdx_fn));
@@ -2223,13 +2228,13 @@ set(handles.FrameIdx_filename,'String', fullfile(data.EpochFrameIdx_path, data.E
 % epoch frame indx mat file
 data.EpochFrameIdx = load(fullfile(data.EpochFrameIdx_path,data.EpochFrameIdx_fn ));
 
-% determine the file type and make the epoch sequence to go through 
-if isfield(data.EpochFrameIdx, 'Epoch_FrameIdx_OppWin_ON') % OptoTim session 
+% determine the file type and make the epoch sequence to go through
+if isfield(data.EpochFrameIdx, 'Epoch_FrameIdx_OppWin_ON') % OptoTim session
     data.Epoch_unite = data.EpochFrameIdx.Epoch_FrameIdx_OppWin_ON;
     data.n_epoch = size(data.Epoch_unite,1);
     
-elseif isfield(data.EpochFrameIdx, 'Epoch_FrameIdx_OptoTrig_ON') % OptoTim session 
-    data.Epoch_unite = cat(1, data.EpochFrameIdx.Epoch_FrameIdx_OptoTrig_ON, data.EpochFrameIdx.Epoch_FrameIdx_ControlTrig_ON); % 
+elseif isfield(data.EpochFrameIdx, 'Epoch_FrameIdx_OptoTrig_ON') % OptoTim session
+    data.Epoch_unite = cat(1, data.EpochFrameIdx.Epoch_FrameIdx_OptoTrig_ON, data.EpochFrameIdx.Epoch_FrameIdx_ControlTrig_ON); %
     data.n_epoch = size(data.Epoch_unite,1);
     
 else
@@ -2238,7 +2243,7 @@ end
 
 data.n_epoch_curr = 1; % initiated
 
-% set curr frame accordingly 
+% set curr frame accordingly
 fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr,  data.Epoch_unite(1,1), data.Epoch_unite(1,2));
 set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
 set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
@@ -2300,7 +2305,7 @@ if temp > size(data.Epoch_unite,1)
         data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
     set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
     set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
-
+    
 else
     data.n_epoch_curr = temp;
     data.curr_fr = data.Epoch_unite(data.n_epoch_curr,1);
@@ -2308,20 +2313,20 @@ else
         data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
     set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
     set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
-
+    
     % update current frame
     set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
     
-% CurrFrameNum_Callback(hObject, eventdata, handles)
-data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
-data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
-data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
-
-% return data
-guidata(hObject,data)
-% update curr trial nunmber
-plot_current_frame (hObject, eventdata, handles);
-
+    % CurrFrameNum_Callback(hObject, eventdata, handles)
+    data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+    data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+    data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+    
+    % return data
+    guidata(hObject,data)
+    % update curr trial nunmber
+    plot_current_frame (hObject, eventdata, handles);
+    
 end
 
 
@@ -2355,7 +2360,7 @@ if data.n_epoch_curr > size(data.Epoch_unite,1)
         data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
     set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
     set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
-
+    
 else
     disp('Next Epoch')
     set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
@@ -2364,7 +2369,7 @@ else
         data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
     set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
     set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
-
+    
     % first update global data?
     set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
     % CurrFrameNum_Callback(hObject, eventdata, handles)
@@ -2396,7 +2401,7 @@ if data.n_epoch_curr < 1
         data.Epoch_unite(data.n_epoch_curr,1), data.Epoch_unite(data.n_epoch_curr,2));
     set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
     set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
-
+    
 else
     disp('Previous Epoch')
     set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
@@ -2408,16 +2413,16 @@ else
     
     set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
     
-  % CurrFrameNum_Callback(hObject, eventdata, handles)
-data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
-data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
-data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
-
-% return data
-guidata(hObject,data)
-% update curr trial nunmber
-plot_current_frame (hObject, eventdata, handles);
-
+    % CurrFrameNum_Callback(hObject, eventdata, handles)
+    data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+    data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+    data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+    
+    % return data
+    guidata(hObject,data)
+    % update curr trial nunmber
+    plot_current_frame (hObject, eventdata, handles);
+    
 end
 
 
@@ -2473,57 +2478,51 @@ guidata(hObject,data)
 plot_current_frame (hObject, eventdata, handles)
 figure(data.figure1); % return to the panel
 
-% --- Executes on button press in OF_autoCorrect.
-function OF_autoCorrect_Callback(hObject, eventdata, handles)
-% hObject    handle to OF_autoCorrect (see GCBO)
+% --- Executes on button press in OF_autoEpoch_headbar.
+function OF_autoEpoch_headbar_Callback(hObject, eventdata, handles)
+% hObject    handle to OF_autoEpoch_headbar (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % use data in corrected tracking, to run auto correction, generate
 % inspection epochs, load inot the EpochFrame module
 data = guidata(hObject);
+body_parts = fieldnames(data.Track.Corrected);
+% check body parts with model
+if ~any(ismember(body_parts, 'snout')) || ...
+        ~any(ismember(body_parts, 'leftear')) || ...
+        ~any(ismember(body_parts, 'rightear')) || ...
+        ~any(ismember(body_parts, 'tailbase')) || ...
+        ~any(ismember(body_parts, 'neck')) || length(body_parts) ~= 5
+    warning('DLC result does not match OpenField_maDLC-Gate-2021-02-13 model. REturned');
+    return
+end
+disp('Use leftear - righear distance and angle with the snout and neck to generate potential bad tracking epochs')
+disp('leftear should be on the left side of neck-snout vector');
+disp('rightear should be on the left side of neck-snout vector');
+disp('left-right distance should be a stable value');
 
-warning('This function NOW only works with data analyzed by OpenField_maDLC-Gate-2021-02-13 model');
-tmp = input('ENTER 1 to continue, press ANYKEY to abort this process');
-if ~isempty(tmp)
-    %% apply autoCorrection on the corrected data    
-    % default parameters for autocorrection
-    prompt = {'rlowess window size (frame n)', ...
-              'median filter window size (frame n)', ...
-              'angle boundary from the median of neck2snout To neck2left', ...
-              'angle boundary from the median of neck2snout To neck2right', ...
-              'angle boundary from the median of neck2left  To neck2right', ...
-              'angle boundary from the median of neck2tail  To neck2left', ...
-              'angle boundary from the median of neck2tail  To neck2right', ...
-              'angle boundary from the median of neck2snout To neck2tail', ...
-              'times of STD as boundary for distance from left2right' ...
-              };
-    dlg_title = 'AutoCorrection parameters (30Hz video uses default)';
-    num_lines = 1;
-    defaultans = {'10', '5', ...
-                  '30', '30', '60', '80','80', '90', '4'}; 
-    answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
-    %
-    n_smo = str2double(answer{1});
-    n_medfilt = str2double(answer{2});
-    paras_bound.neck2snoutTneck2left = str2double(answer{3});
-    paras_bound.neck2snoutTneck2right = str2double(answer{4});
-    paras_bound.neck2leftTneck2right = str2double(answer{5});
-    paras_bound.neck2tailTneck2left = str2double(answer{6});
-    paras_bound.neck2tailTneck2right = str2double(answer{7});
-    paras_bound.neck2snoutTneck2tail = str2double(answer{8});
-    paras_bound.l_left2right = str2double(answer{9});
-    
-    body_parts = fieldnames(data.Track.Corrected);
-    % check body parts with model
-    if ~any(ismember(body_parts, 'snout')) || ...
-            ~any(ismember(body_parts, 'leftear')) || ...
-            ~any(ismember(body_parts, 'rightear')) || ...
-            ~any(ismember(body_parts, 'tailbase')) || ...
-            ~any(ismember(body_parts, 'neck')) || length(body_parts) ~= 5
-        warning('DLC result does not match OpenField_maDLC-Gate-2021-02-13 model. REturned');
-        return
-    end
-    disp('AutoCorrecting ...')
+
+% default parameters for autocorrection
+prompt = {'angle neck2snout To neck2left min', ...
+    'angle neck2snout To neck2left max', ...
+    'angle neck2snout To neck2right min', ...
+    'angle neck2snout To neck2right max', ...
+    'times of STD as boundary for distance from left2right' ...
+    };
+dlg_title = 'AutoEpoch parameters';
+num_lines = 1;
+defaultans = {'0', '180', '180', '360', '4'};
+answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
+%
+bound.neck2snoutTneck2left = [str2double(answer{1}) str2double(answer{2})];
+bound.neck2snoutTneck2right = [str2double(answer{3}) str2double(answer{4})];
+paras_bound.l_left2right = str2double(answer{5});
+
+
+%% do not use rlowes filter method
+%{
+    disp('rlowess filter method to get epochs ...')
+    tmp_idx_toFill = [];
     for i_b = 1:length(body_parts)
         tmp_smo.x = smooth(data.Track.Corrected.(body_parts{i_b}).x, n_smo, 'rlowess' ); % rlowess takes a while
         tmp_smo.y = smooth(data.Track.Corrected.(body_parts{i_b}).y, n_smo, 'rlowess' ); % rlowess takes a while
@@ -2532,139 +2531,115 @@ if ~isempty(tmp)
         
         noise_std = std(tmp_smo_Dist);
         dist_median = nanmedian(tmp_smo_Dist);
-        tmp_idx_toFill = find(tmp_smo_Dist > dist_median + 3 * noise_std);
+        tmp_idx_toFill = cat(1, tmp_idx_toFill, find(tmp_smo_Dist > (dist_median + 3 * noise_std)));
 
-        data.Track.Corrected.(body_parts{i_b}).x(tmp_idx_toFill) = NaN;
-        data.Track.Corrected.(body_parts{i_b}).y(tmp_idx_toFill) = NaN;
-        data.Track.Corrected.(body_parts{i_b}).x = inpaint_nans(data.Track.Corrected.(body_parts{i_b}).x,3);
-        data.Track.Corrected.(body_parts{i_b}).y = inpaint_nans(data.Track.Corrected.(body_parts{i_b}).y,3);
+%         data.Track.Corrected.(body_parts{i_b}).x(tmp_idx_toFill) = NaN;
+%         data.Track.Corrected.(body_parts{i_b}).y(tmp_idx_toFill) = NaN;
+%         data.Track.Corrected.(body_parts{i_b}).x = inpaint_nans(data.Track.Corrected.(body_parts{i_b}).x,3);
+%         data.Track.Corrected.(body_parts{i_b}).y = inpaint_nans(data.Track.Corrected.(body_parts{i_b}).y,3);
+%
+%         data.Track.Corrected.(body_parts{i_b}).x = medfilt1(data.Track.Corrected.(body_parts{i_b}).x,n_medfilt);
+%         data.Track.Corrected.(body_parts{i_b}).y = medfilt1(data.Track.Corrected.(body_parts{i_b}).y,n_medfilt);
         
-        data.Track.Corrected.(body_parts{i_b}).x = medfilt1(data.Track.Corrected.(body_parts{i_b}).x,n_medfilt);
-        data.Track.Corrected.(body_parts{i_b}).y = medfilt1(data.Track.Corrected.(body_parts{i_b}).y,n_medfilt);       
-        
-    end    
-
-    %% get the epoches for further manual inspection
-    disp('Getting the epoches for inspection ...')
-    % angle 
-    vector_neck2left = [data.Track.Corrected.leftear.x - data.Track.Corrected.neck.x ...
-                        data.Track.Corrected.leftear.y - data.Track.Corrected.neck.y];
-    vector_neck2right = [data.Track.Corrected.rightear.x - data.Track.Corrected.neck.x ...
-                        data.Track.Corrected.rightear.y - data.Track.Corrected.neck.y]; 
-    vector_neck2snout = [data.Track.Corrected.snout.x - data.Track.Corrected.neck.x ...
-                        data.Track.Corrected.snout.y - data.Track.Corrected.neck.y]; 
-    vector_neck2tail = [data.Track.Corrected.tailbase.x - data.Track.Corrected.neck.x ...
-                        data.Track.Corrected.tailbase.y - data.Track.Corrected.neck.y]; 
-    vector_left2right = [data.Track.Corrected.rightear.x - data.Track.Corrected.leftear.x ...
-                        data.Track.Corrected.rightear.y - data.Track.Corrected.leftear.y];
-                
-    for i_fr = 1:length(data.Track.Corrected.neck.x)
-        [angle.neck2snoutTneck2left(i_fr), l_neck2snout(i_fr), l_neck2left(i_fr)]= ...
-            HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2left(i_fr,:));
-        [angle.neck2snoutTneck2right(i_fr), ~,                 l_neck2right(i_fr)]= ...
-            HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2right(i_fr,:));
-        [angle.neck2leftTneck2right(i_fr), ~, ~]= ...
-            HL_OF_AngleOfTwoVectors(vector_neck2left(i_fr,:), vector_neck2right(i_fr,:));
-        
-        [angle.neck2tailTneck2left(i_fr), l_neck2tail(i_fr), ~]= ...
-            HL_OF_AngleOfTwoVectors(vector_neck2tail(i_fr,:), vector_neck2left(i_fr,:));
-        [angle.neck2tailTneck2right(i_fr), ~, ~]= ...
-            HL_OF_AngleOfTwoVectors(vector_neck2tail(i_fr,:), vector_neck2right(i_fr,:));
-        [angle.neck2snoutTneck2tail(i_fr), ~, ~]= ...
-            HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2tail(i_fr,:));
-        l_left2right(i_fr) = sqrt(sum(arrayfun(@(x) x^2, vector_left2right(i_fr,:))) );
-
     end
-    % convert to  0 - 360
-    angle_fn = fieldnames(angle);
-    for i_f = 1:length(angle_fn)
-        angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) = angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) + 360;
-    end 
-    % set boundary for detection error:
-    %{
+%}
+%% get the epoches for further manual inspection
+disp('Use object vector angles to get epoches for inspection ...')
+% angle
+vector_neck2left = [data.Track.Corrected.leftear.x - data.Track.Corrected.neck.x ...
+    data.Track.Corrected.leftear.y - data.Track.Corrected.neck.y];
+vector_neck2right = [data.Track.Corrected.rightear.x - data.Track.Corrected.neck.x ...
+    data.Track.Corrected.rightear.y - data.Track.Corrected.neck.y];
+vector_neck2snout = [data.Track.Corrected.snout.x - data.Track.Corrected.neck.x ...
+    data.Track.Corrected.snout.y - data.Track.Corrected.neck.y];
+vector_left2right = [data.Track.Corrected.rightear.x - data.Track.Corrected.leftear.x ...
+                        data.Track.Corrected.rightear.y - data.Track.Corrected.leftear.y];
+
+for i_fr = 1:length(data.Track.Corrected.neck.x)
+    [angle.neck2snoutTneck2left(i_fr), l_neck2snout(i_fr), l_neck2left(i_fr)]= ...
+        HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2left(i_fr,:));
+    [angle.neck2snoutTneck2right(i_fr), ~,                 l_neck2right(i_fr)]= ...
+        HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2right(i_fr,:));
+%     [angle.neck2leftTneck2right(i_fr), ~, ~]= ...
+%         HL_OF_AngleOfTwoVectors(vector_neck2left(i_fr,:), vector_neck2right(i_fr,:));
+    
+    l_left2right(i_fr) = sqrt(sum(arrayfun(@(x) x^2, vector_left2right(i_fr,:))) );
+end
+% convert to  0 - 360
+angle_fn = fieldnames(angle);
+for i_f = 1:length(angle_fn)
+    angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) = angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) + 360;
+end
+% set boundary for detection error:
+%{
     l_left2right: use median +/- 2 STD
-    angle_neck2snoutTneck2left: median +/ 30 
-    angle_neck2snoutTneck2right: median +/ 30 
+    angle_neck2snoutTneck2left: median +/ 30
+    angle_neck2snoutTneck2right: median +/ 30
     angle_neck2leftTneck2right: median +/ 60
     angle_neck2tailTneck2left: median +/ 80
     angle_neck2tailTneck2right: median +/ 80
     angle_neck2snoutTneck2tail: median +/ 80
-    %}
-    bound.l_left2right = [-1 1]*paras_bound.l_left2right*nanstd(l_left2right)+nanmedian(l_left2right);
-    bound.neck2snoutTneck2left = nanmedian(angle.neck2snoutTneck2left) + [-1 1]*paras_bound.neck2snoutTneck2left;
-    bound.neck2snoutTneck2right = nanmedian(angle.neck2snoutTneck2right) + [-1 1]*paras_bound.neck2snoutTneck2right;
-    bound.neck2leftTneck2right = nanmedian(angle.neck2leftTneck2right) + [-1 1]*paras_bound.neck2leftTneck2right;
-    bound.neck2tailTneck2left = nanmedian(angle.neck2tailTneck2left) + [-1 1]*paras_bound.neck2tailTneck2left;
-    bound.neck2tailTneck2right = nanmedian(angle.neck2tailTneck2right) + [-1 1]*paras_bound.neck2tailTneck2right;
-    bound.neck2snoutTneck2tail = nanmedian(angle.neck2snoutTneck2tail) + [-1 1]*paras_bound.neck2snoutTneck2tail;
-    %% get epochs need to check 
-    tmp_idx = [];
-    for i_f = 1:length(angle_fn)
-        tmp_idx = union(tmp_idx, find(angle.(angle_fn{i_f})>bound.(angle_fn{i_f})(2) |  angle.(angle_fn{i_f})<bound.(angle_fn{i_f})(1)) );    
-    end
-    % get the epoch start and end 
-    if  isempty(tmp_idx )
-        Frame_Epoch = [];
-    else
-        tmp_idx_diff = [inf; diff(tmp_idx)];
-        tmp_idx_gap = find(tmp_idx_diff>1);
-        Frame_Epoch(:,1)= tmp_idx(tmp_idx_gap);
-        Frame_Epoch(end,2)=tmp_idx(end);
-        Frame_Epoch(1:end-1,2)=tmp_idx(tmp_idx_gap(2:end)-1);
-    end
-    %% plot the angle result and Epoches 
-     figure;
-    a = [];
-    a(1) = subplot(7,1,1);
-    plot(l_left2right);
-    title('Left-Right distance');
-    hold on;
-    plot([1 length(l_left2right)], ones(1,2)*bound.l_left2right(1), 'r')
-    plot([1 length(l_left2right)], ones(1,2)*bound.l_left2right(2), 'r')
-    a(2) = subplot(7,1,2);
-    plot(angle.neck2snoutTneck2left);
-    title('Angle neck2sount -> neck2left');
-        hold on;
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2left(1), 'r')
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2left(2), 'r')
-a(3) = subplot(7,1,3);
-    plot(angle.neck2snoutTneck2right);
-    title('Angle neck2sount -> neck2right');
-            hold on;
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2right(1), 'r')
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2right(2), 'r')
+%}
+bound.l_left2right = [-1 1]*paras_bound.l_left2right*nanstd(l_left2right)+nanmedian(l_left2right);
 
-    a(4) = subplot(7,1,4);
-    plot(angle.neck2leftTneck2right);
-    title('Angle neck2left -> neck2right');
-             hold on;
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2leftTneck2right(1), 'r')
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2leftTneck2right(2), 'r')
+%% get epochs need to check
+tmp_idx = [];
+for i_f = 1:length(angle_fn)
+    tmp_idx = union(tmp_idx, ...
+        find(angle.(angle_fn{i_f})>bound.(angle_fn{i_f})(2) |  angle.(angle_fn{i_f})<bound.(angle_fn{i_f})(1)) );
+end
+%% get the epoch start and end
+if  isempty(tmp_idx )
+    Frame_Epoch = [];
+else
+    tmp_idx_diff = [inf; diff(tmp_idx)];
+    tmp_idx_gap = find(tmp_idx_diff>1);
+    Frame_Epoch(:,1)= tmp_idx(tmp_idx_gap);
+    Frame_Epoch(end,2)=tmp_idx(end);
+    Frame_Epoch(1:end-1,2)=tmp_idx(tmp_idx_gap(2:end)-1);
+end
+%% plot the angle result and Epoches :: also keep this figure for fast check
+data.figure_epoch=figure;
+a = [];
 
-    a(5) = subplot(7,1,5);
-    plot(angle.neck2tailTneck2left);
-    title('Angle neck2tail -> neck2left');
-             hold on;
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2left(1), 'r')
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2left(2), 'r')
+a(1) = subplot(4,2,1);
+plot(l_left2right);
+title('Left-Right distance');
+hold on;
+plot([1 length(l_left2right)], ones(1,2)*bound.l_left2right(1), 'r')
+plot([1 length(l_left2right)], ones(1,2)*bound.l_left2right(2), 'r')
+a(3) = subplot(4,2,3);
+plot(l_neck2snout);
+title('Neck2Snout distance');
+a(5) = subplot(4,2,5);
+plot(l_neck2left);
+title('Neck2Left distance');
+a(7) = subplot(4,2,7);
+plot(l_neck2right);
+title('Neck2Right distance');
 
-    a(6) = subplot(7,1,6);
-    plot(angle.neck2tailTneck2right);
-    title('Angle neck2tail -> neck2right');
-             hold on;
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2right(1), 'r')
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2tailTneck2right(2), 'r')
 
-    a(7) = subplot(7,1,7);
-    plot(angle.neck2snoutTneck2tail);
-    title('Angle neck2snout -> neck2tail');
-             hold on;
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2tail(1), 'r')
-    plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2tail(2), 'r')
-    linkaxes(a, 'x');
-    %% sign Epoch
-    % set the name of static txt box FrameIdx Filename
-set(handles.FrameIdx_filename,'String', 'AutoCorrection Found Epochs');
+
+
+
+a(2) = subplot(4,2,2);
+plot(angle.neck2snoutTneck2left);
+title('Angle neck2sount -> neck2left');
+hold on;
+plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2left(1), 'r')
+plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2left(2), 'r')
+a(4) = subplot(4,2,4);
+plot(angle.neck2snoutTneck2right);
+title('Angle neck2sount -> neck2right');
+hold on;
+plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2right(1), 'r')
+plot([1 length(l_left2right)], ones(1,2)*bound.neck2snoutTneck2right(2), 'r')
+
+
+linkaxes(a, 'x');
+%% sign Epoch
+% set the name of static txt box FrameIdx Filename
+set(handles.FrameIdx_filename,'String', 'HeadBar Epochs');
 
 % epoch frame indx mat file
 data.EpochFrameIdx = [];%load(fullfile(data.EpochFrameIdx_path,data.EpochFrameIdx_fn ));
@@ -2672,8 +2647,10 @@ data.Epoch_unite = Frame_Epoch;
 data.n_epoch = size(data.Epoch_unite,1);
 
 data.n_epoch_curr = 1; % initiated
-
-% set curr frame accordingly 
+% % zoom in around the 1st epoch -- updated in plot_curr_frame function
+% figure(data.figure_epoch);
+% xlim(data.Epoch_unite(1,:)+[-20 20]);
+% set curr frame accordingly
 fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr,  data.Epoch_unite(1,1), data.Epoch_unite(1,2));
 set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
 set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
@@ -2689,12 +2666,13 @@ data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
 data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
 data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
 
-    
-    
-    %% update guidata/return revised data to GUI
-    guidata(hObject,data)
-end
+
+
+%% update guidata/return revised data to GUI
+guidata(hObject,data)
+
 plot_current_frame (hObject, eventdata, handles)
+
 % tic
 % Save_Callback(hObject, eventdata, handles);
 figure(data.figure1); % return to the panel
@@ -2717,6 +2695,212 @@ if tmp
     
 end
 plot_current_frame (hObject, eventdata, handles)
+% tic
+% Save_Callback(hObject, eventdata, handles);
+figure(data.figure1); % return to the panel
+
+
+% --- Executes on button press in AutoEpoch_Jump.
+function AutoEpoch_Jump_Callback(hObject, eventdata, handles)
+% hObject    handle to AutoEpoch_Jump (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = guidata(hObject);
+tmp_obj = data.body_parts{data.part2plot(data.correction_ind_in_part2plot)};
+disp(['Get JumpEpoch for ', data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}])
+
+% get distance 
+tmp.x = data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).x;
+tmp.y = data.Track.Corrected.(data.body_parts{data.part2plot(data.correction_ind_in_part2plot)}).y;
+tmp_diff.x = [NaN; diff(tmp.x )];
+tmp_diff.y = [NaN; diff(tmp.y )];
+
+tmp_d = (tmp_diff.x.^2 + tmp_diff.y.^2).^0.5;
+figure; 
+cdfplot(tmp_d);
+title('CDF of the Distance')
+% default parameters for autocorrection
+prompt = {'Threshold for Jump detection'};
+dlg_title = 'AutoEpoch parameters';
+num_lines = 1;
+defaultans = {'20'};
+answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
+%
+jump_thred = str2double(answer{1});
+
+%%
+tmp_idx = find(tmp_d>jump_thred);
+
+%% get the epoch start and end
+if  isempty(tmp_idx )
+    Frame_Epoch = [];
+else
+    tmp_idx_diff = [inf; diff(tmp_idx)];
+    tmp_idx_gap = find(tmp_idx_diff>1);
+    Frame_Epoch(:,1)= tmp_idx(tmp_idx_gap);
+    Frame_Epoch(end,2)=tmp_idx(end);
+    Frame_Epoch(1:end-1,2)=tmp_idx(tmp_idx_gap(2:end)-1);
+end
+%% plot the angle result and Epoches :: also keep this figure for fast check
+data.figure_epoch=figure;
+plot(tmp_d);
+title(['Distance by frame: ' tmp_obj] );
+hold on;
+plot([1 length(tmp_d)], ones(1,2)*jump_thred, 'r')
+   %% sign Epoch
+% set the name of static txt box FrameIdx Filename
+set(handles.FrameIdx_filename,'String', [tmp_obj ' Epochs']);
+
+% epoch frame indx mat file
+data.EpochFrameIdx = [];%load(fullfile(data.EpochFrameIdx_path,data.EpochFrameIdx_fn ));
+data.Epoch_unite = Frame_Epoch;
+data.n_epoch = size(data.Epoch_unite,1);
+
+data.n_epoch_curr = 1; % initiated
+% % zoom in around the 1st epoch -- updated in plot_curr_frame function
+% figure(data.figure_epoch);
+% xlim(data.Epoch_unite(1,:)+[-20 20]);
+% set curr frame accordingly
+fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr,  data.Epoch_unite(1,1), data.Epoch_unite(1,2));
+set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
+data.curr_fr = data.Epoch_unite(1,1);
+
+set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
+set(handles.N_TotalEpoch, 'String', num2str(size(data.Epoch_unite,1)));
+set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+
+% CurrFrameNum_Callback(hObject, eventdata, handles)
+data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+
+
+
+%% update guidata/return revised data to GUI
+guidata(hObject,data)
+plot_current_frame (hObject, eventdata, handles)
+
+figure(data.figure1); % return to the panel
+
+% --- Executes on button press in OF_autoEpoch_SnoutTail.
+function OF_autoEpoch_SnoutTail_Callback(hObject, eventdata, handles)
+% hObject    handle to OF_autoEpoch_SnoutTail (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+data = guidata(hObject);
+body_parts = fieldnames(data.Track.Corrected);
+% check body parts with model
+if ~any(ismember(body_parts, 'snout')) || ...
+        ~any(ismember(body_parts, 'leftear')) || ...
+        ~any(ismember(body_parts, 'rightear')) || ...
+        ~any(ismember(body_parts, 'tailbase')) || ...
+        ~any(ismember(body_parts, 'neck')) || length(body_parts) ~= 5
+    warning('DLC result does not match OpenField_maDLC-Gate-2021-02-13 model. REturned');
+    return
+end
+disp('Use snout-neck-tailbase distance and angle to generate potential bad tracking epochs')
+disp('neck should be between snout and tailbase');
+
+
+% default parameters for autocorrection
+prompt = {'angle neck2snout To nect2tail min', ...
+    'angle neck2snout To nect2tail max', ...
+      };
+dlg_title = 'AutoEpoch parameters';
+num_lines = 1;
+defaultans = {'80', '280'};
+answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
+%
+bound.neck2snoutTneck2tail = [str2double(answer{1}) str2double(answer{2})];
+
+%% get the epoches for further manual inspection
+disp('Use object vector angles to get epoches for inspection ...')
+% angle
+vector_neck2snout = [data.Track.Corrected.snout.x - data.Track.Corrected.neck.x ...
+    data.Track.Corrected.snout.y - data.Track.Corrected.neck.y];
+vector_neck2tail = [data.Track.Corrected.tailbase.x - data.Track.Corrected.neck.x ...
+    data.Track.Corrected.tailbase.y - data.Track.Corrected.neck.y];
+
+for i_fr = 1:length(data.Track.Corrected.neck.x)
+    [angle.neck2snoutTneck2tail(i_fr), ~, ~]= ...
+        HL_OF_AngleOfTwoVectors(vector_neck2snout(i_fr,:), vector_neck2tail(i_fr,:));
+end
+% convert to  0 - 360
+angle_fn = fieldnames(angle);
+for i_f = 1:length(angle_fn)
+    angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) = angle.(angle_fn{i_f})(angle.(angle_fn{i_f})<0) + 360;
+end
+% set boundary for detection error:
+%{
+    l_left2right: use median +/- 2 STD
+    angle_neck2snoutTneck2left: median +/ 30
+    angle_neck2snoutTneck2right: median +/ 30
+    angle_neck2leftTneck2right: median +/ 60
+    angle_neck2tailTneck2left: median +/ 80
+    angle_neck2tailTneck2right: median +/ 80
+    angle_neck2snoutTneck2tail: median +/ 80
+%}
+
+%% get epochs need to check
+tmp_idx = [];
+for i_f = 1:length(angle_fn)
+    tmp_idx = union(tmp_idx, ...
+        find(angle.(angle_fn{i_f})>bound.(angle_fn{i_f})(2) |  angle.(angle_fn{i_f})<bound.(angle_fn{i_f})(1)) );
+end
+%% get the epoch start and end
+if  isempty(tmp_idx )
+    Frame_Epoch = [];
+else
+    tmp_idx_diff = [inf; diff(tmp_idx)];
+    tmp_idx_gap = find(tmp_idx_diff>1);
+    Frame_Epoch(:,1)= tmp_idx(tmp_idx_gap);
+    Frame_Epoch(end,2)=tmp_idx(end);
+    Frame_Epoch(1:end-1,2)=tmp_idx(tmp_idx_gap(2:end)-1);
+end
+%% plot the angle result and Epoches :: also keep this figure for fast check
+data.figure_epoch=figure;
+plot(angle.neck2snoutTneck2tail);
+title('Angle neck2snout -> neck2tail');
+hold on;
+plot([1 length(angle.neck2snoutTneck2tail)], ones(1,2)*bound.neck2snoutTneck2tail(1), 'r')
+plot([1 length(angle.neck2snoutTneck2tail)], ones(1,2)*bound.neck2snoutTneck2tail(2), 'r')
+   %% sign Epoch
+% set the name of static txt box FrameIdx Filename
+set(handles.FrameIdx_filename,'String', 'Snout-Neck-Tailbase Epochs');
+
+% epoch frame indx mat file
+data.EpochFrameIdx = [];%load(fullfile(data.EpochFrameIdx_path,data.EpochFrameIdx_fn ));
+data.Epoch_unite = Frame_Epoch;
+data.n_epoch = size(data.Epoch_unite,1);
+
+data.n_epoch_curr = 1; % initiated
+% % zoom in around the 1st epoch -- updated in plot_curr_frame function
+% figure(data.figure_epoch);
+% xlim(data.Epoch_unite(1,:)+[-20 20]);
+% set curr frame accordingly
+fprintf('Curr Epoch# %i: Start Frame %i - End Frame %i \n', data.n_epoch_curr,  data.Epoch_unite(1,1), data.Epoch_unite(1,2));
+set(handles.CurrEpochFr_start,'String', num2str(data.Epoch_unite(data.n_epoch_curr,1)));
+set(handles.CurrEpochFr_end,'String', num2str(data.Epoch_unite(data.n_epoch_curr,2)));
+
+data.curr_fr = data.Epoch_unite(1,1);
+
+set(handles.Curr_Epoch_Num, 'String', num2str(data.n_epoch_curr));
+set(handles.N_TotalEpoch, 'String', num2str(size(data.Epoch_unite,1)));
+set(handles.CurrFrameNum, 'String', num2str(data.curr_fr));
+
+% CurrFrameNum_Callback(hObject, eventdata, handles)
+data.curr_trial = ceil(data.curr_fr/data.frame_n_trial);
+data.idx_current_trial_frs = (data.curr_trial - 1)*data.frame_n_trial + [1:data.frame_n_trial] ;
+data.curr_fr_n_in_trial = find( data.idx_current_trial_frs == data.curr_fr);
+
+
+
+%% update guidata/return revised data to GUI
+guidata(hObject,data)
+plot_current_frame (hObject, eventdata, handles)
+
 % tic
 % Save_Callback(hObject, eventdata, handles);
 figure(data.figure1); % return to the panel
