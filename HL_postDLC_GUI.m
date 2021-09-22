@@ -1368,7 +1368,7 @@ f = msgbox({...
     'Availabel KS:';
     'd-     next frame';
     'a-     previous frame';
-    'space- jump to next 20 frame';
+    'space- jump to next 10 frame';
     'b-     jump to next 200 frame';
     'e-     goto mouse selection frame';
     'f-     next trial';
@@ -1383,7 +1383,7 @@ f = msgbox({...
     'g-     next epoch';
     'z-     previous epoch'},...
     'Key Board Short Cuts');
-disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
+disp(['d-next frame, a-previous frame, space-jump 10 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
     'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
     'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session' ...
     'g-next epoch, z-previous epoch'])
@@ -1597,14 +1597,14 @@ switch eventdata.Key
             plot_current_frame (hObject, eventdata, handles);
         end
         
-    case 'space' % jump 20 frames
-        if data.Data.curr_fr+ 20 >= data.Data.N_fr_tol
+    case 'space' % jump 10 frames
+        if data.Data.curr_fr+ 10 >= data.Data.N_fr_tol
             data.Data.curr_fr = data.Data.N_fr_tol;
             warning('END of Movie');
-        elseif data.Data.curr_fr+ 20 >= data.Data.idx_current_trial_frs(end)
+        elseif data.Data.curr_fr+ 10 >= data.Data.idx_current_trial_frs(end)
             warning('END of curr display, move to next trial/disp, please!!');
         else
-            disp('Jump 20 Frames Forward')
+            disp('Jump 10 Frames Forward')
             data.Data.curr_fr = data.Data.curr_fr + 20;
             guidata(hObject,data);
             set(handles.CurrFrameNum,'String', data.Data.curr_fr);
@@ -1655,13 +1655,13 @@ switch eventdata.Key
         SetCorrectionList_Callback_3(hObject, eventdata, handles);
     case 'h' % help
         disp('Availabel KeyboardShortCut');
-        disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
+        disp(['d-next frame, a-previous frame, space-jump 10 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
             'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
             'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session' ...
             'g-next epoch, z-previous epoch'])
     otherwise
         disp('Not a defined Keyboard Shortcut');
-        disp(['d-next frame, a-previous frame, space-jump 20 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
+        disp(['d-next frame, a-previous frame, space-jump 10 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
             'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
             'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session'...
             'g-next epoch, z-previous epoch'])
