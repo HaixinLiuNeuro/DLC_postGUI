@@ -287,6 +287,13 @@ elseif ~isempty(dir([data.Data.movie_path, data.Data.movie_fn(1:end-4) '*.DLCcmb
     data.Data.Track = temp;
     
 else
+    % ask if DLC result .csv file or SLEAP result .h5
+    result_type = input('Are you using the result of DLC (.csv) -- 1 or SLEAP (.h5) -- 2: Please type in the answer');
+    while ~any(result_type)
+           result_type = input('Are you using the result of DLC (.csv) -- 1 or SLEAP (.h5) -- 2: Please type in the answer'); 
+    end
+    switch result_type
+        case 1
     %% regular csv result from DLC ouput
     disp('New examining DLC csv file')
     
@@ -339,6 +346,58 @@ else
         data.Data.Track.Ori.(colnames{3*(i_part-1)+1+1}).Likelihood = M(:,1+3+3*(i_part-1));
     end
     
+        case 2 % SLEAP .h5
+    % get corresponding .h file (DLC result)
+    csv_fn = dir([data.Data.movie_path, data.Data.movie_fn(1:end-4) '*.h5']);
+    %     csv_fn_Side = dir([data.Data.movie_path, data.Data.movie_fn_Side(1:end-4) '*.csv']);
+    % HL 2021-4-14 add in .csvcmb file type, which is the combined DLC result
+    % in .mat format
+    
+    if isempty(csv_fn)
+        warning('No h5 Front file found in movie folder, Select the CSV elsewhere');
+        % just open GUI selection
+        [csv_fn, csv_path ]= uigetfile([data.Data.movie_path, '*.h5'], ['Select h5 file for: ' data.Data.movie_fn(1:end-4)]);
+        data.Data.csv_fn = fullfile(csv_path, csv_fn);
+        
+    else
+        % if multple files, ask to select
+        if length(csv_fn)>1
+            [csv_fn,~ ]= uigetfile([data.Data.movie_path, data.Data.movie_fn(1:end-4) '*.h5'], ['Select h5 file for: ' data.Data.movie_fn(1:end-4)]);
+            data.Data.csv_fn = fullfile(data.Data.movie_path, csv_fn);
+        else
+            data.Data.csv_fn = fullfile(csv_fn.folder, csv_fn.name);
+        end
+    end
+    
+    % fetch all body parts
+%     occupancy_matrix = h5read(data.Data.csv_fn,'/track_occupancy'); % for muilti animal
+    tracks_matrix = h5read(data.Data.csv_fn,'/tracks'); % fr x body parts x 2 (x,y)
+%     track_names = h5read(data.Data.csv_fn,'/track_names');
+%         tracking_scores = h5read(data.Data.csv_fn,'/tracking_scores'); %?? what is this
+%         instance_scores = h5read(data.Data.csv_fn,'/instance_scores'); %?? what is this
+        node_names = h5read(data.Data.csv_fn,'/node_names'); % body label
+ point_scores = h5read(data.Data.csv_fn,'/point_scores'); % confidence interval
+%     info = h5info(data.Data.csv_fn);
+
+% node_names = arrayfun(@(x) x{1}, node_names, 'UniformOutput', false)
+% now have not figured out how to remove the space after the name... just
+% use first 4 letters
+
+    data.Data.Track.Corrected_frame_ind = [1:size(tracks_matrix,1)]';% % the frame number starts from 0, due to python
+    data.Data.Track.Ori_frame_ind = data.Data.Track.Corrected_frame_ind;
+    for i_part = 1:length(node_names)
+        data.Data.Track.Corrected.(node_names{i_part}(1:4)).x = tracks_matrix(:,i_part,1);
+        data.Data.Track.Corrected.(node_names{i_part}(1:4)).y = tracks_matrix(:,i_part,2);
+        data.Data.Track.Corrected.(node_names{i_part}(1:4)).Likelihood = point_scores(:,i_part);
+        %set ori
+        data.Data.Track.Ori.(node_names{i_part}(1:4)).x = data.Data.Track.Corrected.(node_names{i_part}(1:4)).x;
+        data.Data.Track.Ori.(node_names{i_part}(1:4)).y = data.Data.Track.Corrected.(node_names{i_part}(1:4)).y;
+        data.Data.Track.Ori.(node_names{i_part}(1:4)).Likelihood = data.Data.Track.Corrected.(node_names{i_part}(1:4)).Likelihood;
+    end
+            
+        otherwise
+            error('File type not implemented yet')
+    end
 end
 
 % add in variables needed
@@ -1017,11 +1076,21 @@ if ~isfield(data.Data,'save_fn')
     end
     % HL changed 2020-5-14
     % better to change useing regexp in the future
+    
+    % check if SLEAP, temp fix
+        if any(strfind(data.Data.csv_fn,'.h5'))
+data.Data.save_fn =...
+        fullfile(data.Data.movie_path,...
+        [data.Data.movie_fn(1:end-4), ...
+        '_SLEAP',...
+        '.mat']);
+        else
     data.Data.save_fn =...
         fullfile(data.Data.movie_path,...
         [data.Data.movie_fn(1:end-4), ...
         data.Data.csv_fn(temp_idx(end-2):end-4),...
         '.mat']);
+        end
     % when training, make different stop point
 end
 temp_save.csv_fn = data.Data.csv_fn;
