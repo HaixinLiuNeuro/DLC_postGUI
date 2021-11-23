@@ -1901,7 +1901,7 @@ switch  answer
         error('!')
 end
 
-
+if isfield(data, 'Data')
 if isfield(data.Data, 'fig_im_h')
     if ishandle(data.Data.fig_im_h)
         close (data.Data.fig_im_h)
@@ -1911,6 +1911,7 @@ if isfield(data.Data, 'fig_coor_h')
     if ishandle(data.Data.fig_coor_h)
         close (data.Data.fig_coor_h)
     end
+end
 end
 delete(hObject);
 % clear
