@@ -1722,18 +1722,20 @@ switch eventdata.Key
         SetCorrectionList_Callback_2(hObject, eventdata, handles);
     case '3'
         SetCorrectionList_Callback_3(hObject, eventdata, handles);
+    case 'p'
+        BadTrial_Callback(hObject, eventdata, handles)
     case 'h' % help
         disp('Availabel KeyboardShortCut');
         disp(['d-next frame, a-previous frame, space-jump 10 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
             'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
             'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session' ...
-            'g-next epoch, z-previous epoch'])
+            'g-next epoch, z-previous epoch, p-label current trial as bad or reverse'])
     otherwise
         disp('Not a defined Keyboard Shortcut');
         disp(['d-next frame, a-previous frame, space-jump 10 frames, b- jump 200 frames, e- goto mouse selection frame, ' ...
             'f-next trial, v-previous trial, s- save, n- NaN current frame, m- NaN a selected section, x- Fill NaNs of Curr Display'...
             'c-correct label for curr frame, t-set bound for curr. display, y-set bound for the whole session'...
-            'g-next epoch, z-previous epoch'])
+            'g-next epoch, z-previous epoch, p-label current trial as bad or reverse'])
         
 end
 
