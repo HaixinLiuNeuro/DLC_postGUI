@@ -376,6 +376,17 @@ else
 %         tracking_scores = h5read(data.Data.csv_fn,'/tracking_scores'); %?? what is this
 %         instance_scores = h5read(data.Data.csv_fn,'/instance_scores'); %?? what is this
         node_names = h5read(data.Data.csv_fn,'/node_names'); % body label
+        
+% 220214 JT_Edit- Convert each cell array to string, then use the strip
+% function to remove any trailing whitespaces, then convert it back it
+% cell
+% Unsuccessful functions: strip (including parameters), strtrim
+for i=1:length(node_names)
+    each_node_name(i,:)=cellstr(deblank(string(node_names{i})));
+end
+% Omit after debugging
+node_names=each_node_name;
+        
  point_scores = h5read(data.Data.csv_fn,'/point_scores'); % confidence interval
 %     info = h5info(data.Data.csv_fn);
 
@@ -386,13 +397,13 @@ else
     data.Data.Track.Corrected_frame_ind = [1:size(tracks_matrix,1)]';% % the frame number starts from 0, due to python
     data.Data.Track.Ori_frame_ind = data.Data.Track.Corrected_frame_ind;
     for i_part = 1:length(node_names)
-        data.Data.Track.Corrected.(node_names{i_part}(1:4)).x = tracks_matrix(:,i_part,1);
-        data.Data.Track.Corrected.(node_names{i_part}(1:4)).y = tracks_matrix(:,i_part,2);
-        data.Data.Track.Corrected.(node_names{i_part}(1:4)).Likelihood = point_scores(:,i_part);
+        data.Data.Track.Corrected.(node_names{i_part}(1:end)).x = tracks_matrix(:,i_part,1);
+        data.Data.Track.Corrected.(node_names{i_part}(1:end)).y = tracks_matrix(:,i_part,2);
+        data.Data.Track.Corrected.(node_names{i_part}(1:end)).Likelihood = point_scores(:,i_part);
         %set ori
-        data.Data.Track.Ori.(node_names{i_part}(1:4)).x = data.Data.Track.Corrected.(node_names{i_part}(1:4)).x;
-        data.Data.Track.Ori.(node_names{i_part}(1:4)).y = data.Data.Track.Corrected.(node_names{i_part}(1:4)).y;
-        data.Data.Track.Ori.(node_names{i_part}(1:4)).Likelihood = data.Data.Track.Corrected.(node_names{i_part}(1:4)).Likelihood;
+        data.Data.Track.Ori.(node_names{i_part}(1:end)).x = data.Data.Track.Corrected.(node_names{i_part}(1:end)).x;
+        data.Data.Track.Ori.(node_names{i_part}(1:end)).y = data.Data.Track.Corrected.(node_names{i_part}(1:end)).y;
+        data.Data.Track.Ori.(node_names{i_part}(1:end)).Likelihood = data.Data.Track.Corrected.(node_names{i_part}(1:end)).Likelihood;
     end
             
         otherwise
