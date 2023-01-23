@@ -22,7 +22,7 @@ function varargout = HL_postDLC_GUI(varargin)
 
 % Edit the above text to modify the response to help HL_postDLC_GUI
 
-% Last Modified by GUIDE v2.5 12-May-2021 22:57:28
+% Last Modified by GUIDE v2.5 16-Sep-2022 15:56:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -458,14 +458,19 @@ set(handles.CurrTrialNum,'String', num2str(data.Data.curr_fr_trial));
 
 data.Data.idx_current_trial_frs = (data.Data.curr_fr_trial - 1)*data.Data.frame_n_trial + [1:data.Data.frame_n_trial] ;
 data.Data.curr_fr_n_in_trial = find( data.Data.idx_current_trial_frs == data.Data.curr_fr);
-
-% delete corner data points
 data.Data.body_parts = fieldnames(data.Data.Track.Corrected);
+
+% delete corner data points:
+% for DLC, occluded points are put in the 50 data point cornner
+% for others, do not do this step 
+if result_type == 1
+disp('Delete corner points in DLC (unreliable), 50-50 corner')
 for i_part = 1:length(data.Data.body_parts)
     temp = find(data.Data.Track.Corrected.(data.Data.body_parts{i_part}).x<50 & ...
         data.Data.Track.Corrected.(data.Data.body_parts{i_part}).y<50);
     data.Data.Track.Corrected.(data.Data.body_parts{i_part}).x(temp) = NaN;
     data.Data.Track.Corrected.(data.Data.body_parts{i_part}).y(temp) = NaN;
+end
 end
 %% prob threshold
 data.Data.prob_thred = 0.9; % need to fetch from GUI
@@ -2987,6 +2992,28 @@ data.Data.idx_current_trial_frs = (data.Data.curr_fr_trial - 1)*data.Data.frame_
 data.Data.curr_fr_n_in_trial = find( data.Data.idx_current_trial_frs == data.Data.curr_fr);
 
 
+
+%% update guidata/return revised data to GUI
+guidata(hObject,data)
+plot_current_frame (hObject, eventdata, handles)
+
+% tic
+% Save_Callback(hObject, eventdata, handles);
+figure(data.figure1); % return to the panel
+
+
+% --- Executes on button press in AutoCorrectSLEAP.
+function AutoCorrectSLEAP_Callback(hObject, eventdata, handles)
+% hObject    handle to AutoCorrectSLEAP (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+%% get data
+data = guidata(hObject);
+%% run the auto-correction algorithm
+% data.Data.Track
+disp('use body parts median to exclude data points')
+[data.Data.Track] = HL_OF_autoCorrSLEAP(data.Data.Track, data.Data.Movie_Obj.Width, data.Data.Movie_Obj.Height);
 
 %% update guidata/return revised data to GUI
 guidata(hObject,data)
